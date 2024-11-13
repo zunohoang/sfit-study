@@ -11,7 +11,7 @@ export default function Component() {
 
     useEffect(() => {
         async function callAPIclasses() {
-            const response = await axios.get('http://localhost:3000/api/classrooms', {
+            const response = await axios.get('/api/classrooms', {
                 params: {
                     email: localStorage.getItem('email'),
                     password: localStorage.getItem('password')

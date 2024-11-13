@@ -14,7 +14,7 @@ export default function Component() {
         async function callAPI() {
 
             const { id } = params;
-            const response = await axios.get('http://localhost:3000/api/getClassroomsById', {
+            const response = await axios.get('/api/getClassroomsById', {
                 params: {
                     email: localStorage.getItem('email'),
                     password: localStorage.getItem('password'),

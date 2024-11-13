@@ -11,7 +11,7 @@ export default function Component() {
     const params = useParams()
     const classroomId = params.id;
 
-    const [classroom, setClassroom] = useState({});
+    const [classroom, setClassroom] = useState<any>({});
     useEffect(() => {
         async function fetchClassroom() {
             const response = await axios.get('http://localhost:3000/api/getClassroomsById', {

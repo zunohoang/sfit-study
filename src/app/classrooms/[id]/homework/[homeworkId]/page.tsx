@@ -116,8 +116,9 @@ export default function ClassroomAssignments() {
             </div>
             {/* Content */}
             <div className="p-4">
-                <h2 className="text-xl font-semibold mb-4">Danh sách bài tập</h2>                <div className="space-y-4">
-                    {assignments.map((assignment) => (
+                <h2 className="text-xl font-semibold mb-4">Danh sách bài tập</h2>
+                <div className="space-y-4">
+                    {assignments.map((assignment): any => (
                         <div key={assignment._id} className="bg-gray-100 rounded-md overflow-hidden">
                             <div
                                 className="flex justify-between items-center p-4 cursor-pointer"

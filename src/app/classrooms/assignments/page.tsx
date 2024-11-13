@@ -12,8 +12,8 @@ interface Assignment {
 }
 
 export default function ClassroomAssignments() {
-    const [activeTab, setActiveTab] = useState('assignments')
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [activeTab, setActiveTab] = useState<string>('assignments')
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const router = useRouter();
 
     const assignments: Assignment[] = [

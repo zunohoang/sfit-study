@@ -15,8 +15,8 @@ interface Assignment {
 }
 
 export default function ClassroomAssignments() {
-    const [activeTab, setActiveTab] = useState('assignments')
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [activeTab, setActiveTab] = useState<string>('assignments')
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const router = useRouter();
 
     const classes = [
@@ -90,7 +90,7 @@ export default function ClassroomAssignments() {
                                 <button className="bg-sky-600 text-white rounded-lg w-24">Thêm</button>
                             </div>
                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                                {classes.map((classItem) => (
+                                {classes.map((classItem): any => (
                                     <Link key={classItem._id} href={`/classrooms/${classItem._id}`} className="overflow-hidden rounded-lg border bg-white shadow-sm">
                                         <div className={`h-24 relative ${classItem.color} p-4`}>
                                             <div className="flex justify-between">

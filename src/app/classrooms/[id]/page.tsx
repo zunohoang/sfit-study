@@ -14,7 +14,7 @@ interface Assignment {
 
 export default function ClassroomAssignments() {
     const [activeTab, setActiveTab] = useState('assignments')
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const router = useRouter();
     const pathname = usePathname();
     const id = pathname.split('/')[2];
@@ -68,7 +68,7 @@ export default function ClassroomAssignments() {
                             Xem bài tập của bạn
                         </button> */}
                         <div className="px-4 flex flex-col gap-4">
-                            {assignments.map((assignment, index) => (
+                            {assignments.map((assignment, index): any => (
                                 <div
                                     key={assignment._id}
                                     className="flex items-center justify-between py-4 border rounded-md px-5 hover:bg-gray-50 cursor-pointer"

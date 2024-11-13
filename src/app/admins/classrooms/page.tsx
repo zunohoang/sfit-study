@@ -7,7 +7,7 @@ import axios from 'axios'
 import { get } from 'http'
 
 export default function Component() {
-    const [classes, setClasses] = useState([]);
+    const [classes, setClasses] = useState<any>([]);
 
     useEffect(() => {
         async function callAPIclasses() {
@@ -30,7 +30,7 @@ export default function Component() {
     return (
         <main className="flex-1 p-6">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {classes.map((classItem) => (
+                {classes.map((classItem: any) => (
                     <Link href={`/admins/classrooms/${classItem._id}/views`} key={classItem._id} className="overflow-hidden rounded-lg border bg-white shadow-sm">
                         <div className={`h-24 relative bg-sky-800 p-4`}>
                             <div className="flex justify-between">

@@ -9,7 +9,7 @@ export default function Component() {
     const params = useParams();
     const { id } = params;
 
-    const [classroom, setClassroom] = useState({});
+    const [classroom, setClassroom] = useState<any>({});
     useEffect(() => {
         async function callAPI() {
 

@@ -6,8 +6,8 @@ import { title } from 'process';
 import { useRouter } from 'next/navigation';
 
 export default function AddCourse() {
-    const [courseName, setCourseName] = useState('');
-    const [courseCode, setCourseCode] = useState('');
+    const [courseName, setCourseName] = useState<string>('');
+    const [courseCode, setCourseCode] = useState<string>('');
     const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent) => {

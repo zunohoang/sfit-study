@@ -1,17 +1,18 @@
 'use client';
 
 import { Bell, Calendar, Cog } from "lucide-react";
-import { useRouter } from "next/navigation"; // Import from next/navigation
+import { useRouter, usePathname } from "next/navigation"; // Import from next/navigation
 import Link from "next/link";
 
 export default function Component({ children }: Readonly<{ children: React.ReactNode }>) {
     const router = useRouter();
+    const pathname = usePathname(); // Use usePathname hook
     console.log(router);
     // lay url duong dan trinh duyet
 
     const isActive = (path: string) => {
-        console.log(router.pathname);
-        return router.pathname === path ? 'border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700';
+        console.log(pathname);
+        return pathname === path ? 'border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700';
     };
 
     return (

@@ -655,7 +655,7 @@ export default function ManageClass() {
             const email = localStorage.getItem('email')
             const password = localStorage.getItem('password');
             try {
-                const response = await axios.get('http://localhost:3000/api/admins/classes?id=' + id, {
+                const response = await axios.get('/api/admins/classes?id=' + id, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Basic ${btoa(`${email}:${password}`)}`
@@ -740,7 +740,7 @@ export default function ManageClass() {
         const password = localStorage.getItem('password');
         try {
             console.log(newProblem)
-            const response = await axios.post('http://localhost:3000/api/admins/assignments', {
+            const response = await axios.post('/api/admins/assignments', {
                 title: newProblem.title,
                 description: newProblem.description,
                 deadline: newProblem.deadline,

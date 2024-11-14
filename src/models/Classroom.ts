@@ -1,4 +1,7 @@
 import mongoose from 'mongoose'
+import Assignment from './Assignment'
+import User from './User'
+
 
 const classroomSchema = new mongoose.Schema({
     title: { type: String },

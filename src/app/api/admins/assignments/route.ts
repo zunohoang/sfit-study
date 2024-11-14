@@ -71,14 +71,15 @@ export async function GET(request: Request) {
         if (url.searchParams.get('assignmentId')) {
             const assignmentId: any = url.searchParams.get('assignmentId');
             const assignment = await Assignment.findById(assignmentId);
-            const codes = await Code.find({ assignment: assignmentId });
-            assignment.codes = codes;
+            const codes = await Code.find({ assignment: assignmentId }).populate('user');
+            const temp = assignment.toJSON();
+            temp.codes = codes;
             if (!assignment) {
                 return NextResponse.json({ success: false, message: 'Assignment not found' }, { status: 404 });
             }
             return NextResponse.json({
                 success: true, data: {
-                    assignment: assignment
+                    assignment: temp
                 }
             }, { status: 200 });
         }

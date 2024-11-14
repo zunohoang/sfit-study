@@ -1,9 +1,16 @@
+'use client';
+
 import Link from "next/link"
 import { Book, GraduationCap, Users, Code, ArrowRight, Calendar, Trophy } from 'lucide-react'
+import { useState, useEffect } from "react"
+import ModelStart from "@/components/ModelStart"
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(true)
+
   return (
     <div className="flex flex-col min-h-screen">
+      <ModelStart isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       {/* Hero Section */}
       <header className="relative bg-white">
         <div className="container px-4 py-16 mx-auto sm:px-6 lg:px-8">
@@ -139,7 +146,7 @@ export default function Home() {
                   Facebook
                 </Link>
                 <Link href="#" className="text-gray-400 hover:text-white">
-                  Youtube
+                  Tiktok
                 </Link>
                 <Link href="#" className="text-gray-400 hover:text-white">
                   Github
@@ -148,7 +155,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-8 mt-8 border-t border-gray-800">
-            <p className="text-center text-gray-400">&copy; 2023 SFIT. All rights reserved.</p>
+            <p className="text-center text-gray-400">&copy; 2024 SFIT&zunohoang. All rights reserved.</p>
           </div>
         </div>
       </footer>

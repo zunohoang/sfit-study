@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const assignmentSchema = new mongoose.Schema({
     title: { type: String },
     description: { type: String },
-    deadline: { type: Number },
+    deadline: { type: String },
     problems: { type: [String] },
     classroom: { type: mongoose.Schema.Types.ObjectId, ref: 'Classroom' },
 })

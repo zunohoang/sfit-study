@@ -1,39 +1,81 @@
 'use client'
 
-import { useState, ChangeEvent, FormEvent } from 'react'
-import { Book, Plus, Trash2 } from 'lucide-react'
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react'
+import { Book, Edit, Plus, Trash2 } from 'lucide-react'
 import TextEditor from '@/components/EditerContent'
+import axios from 'axios'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface Class {
-    id: number
-    name: string
-    instructor: string
+    _id: string
+    title: string
+    teacher: string
     time: string
-    students: number
+    students: Array<string>
+    studentNum: number
     description: string
 }
 
 export default function ManageClasses() {
-    const [classes, setClasses] = useState<Class[]>([
-        { id: 1, name: 'Lập trình Web với React', instructor: 'Nguyễn Văn A', time: '2024-01-15', students: 25, description: 'Học lập trình web với ReactJS' },
-        { id: 2, name: 'Python cho Data Science', instructor: 'Trần Thị B', time: '2024-01-20', students: 30, description: 'Học Python cho Data Science' },
-    ])
-    const [newClass, setNewClass] = useState<Omit<Class, 'id'>>({ name: '', instructor: '', time: '', students: 0, description: '' })
+    const [classes, setClasses] = useState<any>([])
+    const [newClass, setNewClass] = useState<any>({ title: '', teacher: '', time: '', students: [], studentNum: 0, description: '' })
+    const router = useRouter()
+    useEffect(() => {
+        const callApiClass = async () => {
+            const email = localStorage.getItem('email')
+            const password = localStorage.getItem('password')
+            const res = await axios.get('/api/admins/classes', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+                }
+            });
+
+            const data = res.data;
+            console.log(data)
+            if (data.success) {
+                setClasses(data.data.classrooms);
+            }
+        }
+        callApiClass()
+    }, [])
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
-        setNewClass({ ...newClass, [name]: name === 'students' ? parseInt(value) : value })
+        setNewClass({ ...newClass, [name]: name === 'studentNum' ? parseInt(value) : value })
     }
 
-    const addClass = (e: FormEvent) => {
+    const addClass = async (e: FormEvent) => {
         e.preventDefault()
-        const id = classes.length + 1
-        setClasses([...classes, { id, ...newClass }])
-        setNewClass({ name: '', instructor: '', time: '', students: 0, description: '' })
+        console.log(newClass)
+        try {
+            const email = localStorage.getItem('email')
+            const password = localStorage.getItem('password')
+            const res = await axios.post('/api/admins/classes', newClass, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+                }
+            });
+
+            const data = res.data;
+            if (data.success) {
+                alert('Thêm lớp học thành công')
+                router.push('/admins/classes/' + data.data.classroom._id);
+            } else {
+                alert('Thêm lớp học thất bại')
+            }
+        } catch (error) {
+            console.log(error)
+            alert('Thêm lớp học thất bại')
+        }
     }
 
-    const removeClass = (id: number) => {
-        setClasses(classes.filter(c => c.id !== id))
+    const removeClass = (id: string) => {
+        const check = confirm('Bạn có chắc chắn muốn xóa lớp học này?');
+        if (!check) return
+        setClasses(classes.filter((c: any) => c._id !== id))
     }
 
     return (
@@ -47,24 +89,24 @@ export default function ManageClasses() {
                             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Thêm lớp học mới</h3>
                             <form onSubmit={addClass} className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                                 <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên lớp học</label>
+                                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">Tên lớp học</label>
                                     <input
                                         type="text"
-                                        name="name"
-                                        id="name"
-                                        value={newClass.name}
+                                        name="title"
+                                        id="title"
+                                        value={newClass.title}
                                         onChange={handleInputChange}
                                         required
                                         className="p-2 mt-1 focus:ring-green-500 focus:border-green-500 w-full shadow-sm shadow-gray-300 sm:text-sm border-gray-400 rounded-md"
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="instructor" className="block text-sm font-medium text-gray-700">Giảng viên</label>
+                                    <label htmlFor="teacher" className="block text-sm font-medium text-gray-700">Giảng viên</label>
                                     <input
                                         type="text"
-                                        name="instructor"
-                                        id="instructor"
-                                        value={newClass.instructor}
+                                        name="teacher"
+                                        id="teacher"
+                                        value={newClass.teacher}
                                         onChange={handleInputChange}
                                         required
                                         className="p-2 mt-1 focus:ring-green-500 focus:border-green-500 w-full shadow-sm shadow-gray-300 sm:text-sm border-gray-400 rounded-md"
@@ -83,12 +125,12 @@ export default function ManageClasses() {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="students" className="block text-sm font-medium text-gray-700">Số lượng học viên</label>
+                                    <label htmlFor="studentNum" className="block text-sm font-medium text-gray-700">Số lượng học viên</label>
                                     <input
-                                        type="text"
-                                        name="students"
-                                        id="students"
-                                        value={newClass.students}
+                                        type="number"
+                                        name="studentNum"
+                                        id="studentNum"
+                                        value={newClass.studentNum}
                                         onChange={handleInputChange}
                                         required
                                         className="p-2 mt-1 focus:ring-green-500 focus:border-green-500 w-full shadow-sm shadow-gray-300 sm:text-sm border-gray-400 rounded-md"
@@ -117,25 +159,31 @@ export default function ManageClasses() {
                         </div>
                         <div className="border-t border-gray-200">
                             <ul className="divide-y divide-gray-200">
-                                {classes.map((cls) => (
-                                    <li key={cls.id} className="px-4 py-4 sm:px-6">
+                                {classes && classes.map((cls: any) => (
+                                    <li key={cls._id} className="px-4 py-4 sm:px-6">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0">
                                                     <Book className="h-8 w-8 text-green-500" />
                                                 </div>
                                                 <div className="ml-4">
-                                                    <h4 className="text-lg font-medium text-gray-900">{cls.name}</h4>
-                                                    <p className="text-sm text-gray-500">Giảng viên: {cls.instructor}</p>
+                                                    <h4 className="text-lg font-medium text-gray-900">{cls.title}</h4>
+                                                    <p className="text-sm text-gray-500">Giảng viên: {cls.teacher}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center">
+                                            <div className="flex items-center gap-3">
                                                 <div className="mr-4 flex flex-col items-end">
-                                                    <p className="text-sm text-gray-900">Ngày bắt đầu: {cls.time}</p>
-                                                    <p className="text-sm text-gray-500">Số học viên: {cls.students}</p>
+                                                    <p className="text-sm text-gray-900">Thời gian: {cls.time}</p>
+                                                    <p className="text-sm text-gray-500">Số học viên: {cls.studentNum}</p>
                                                 </div>
+                                                <Link
+                                                    href={`/admins/classes/${cls._id}`}
+                                                    className="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                                >
+                                                    <Edit className="h-5 w-5" />
+                                                </Link>
                                                 <button
-                                                    onClick={() => removeClass(cls.id)}
+                                                    onClick={() => removeClass(cls._id)}
                                                     className="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                 >
                                                     <Trash2 className="h-5 w-5" />

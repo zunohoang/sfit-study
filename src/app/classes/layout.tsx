@@ -3,7 +3,8 @@
 import { Menu, Plus, Settings, Home, Calendar, GraduationCap, HelpCircle, Baby, UserCheck } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Bell, Book, Github, User, Users, Youtube, Facebook } from 'lucide-react'
+import { Bell, Book, Github, User, Users, Facebook } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 
@@ -21,6 +22,7 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
 function Header() {
 
     const [showMenu, setShowMenu] = useState(false);
+    const router = useRouter();
 
     return (
         <header className="bg-white shadow">
@@ -37,7 +39,7 @@ function Header() {
                             <Link href="/news" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Bảng tin
                             </Link>
-                            <Link href="https://github.com/zunohoang" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <Link href="https://www.facebook.com/sfit.utc" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Liên hệ
                             </Link>
                         </div>
@@ -62,7 +64,10 @@ function Header() {
                                             <p className="text-gray-500">{localStorage.getItem('msv')}</p>
                                             <p className="text-gray-500">{localStorage.getItem('loptruong')}</p>
                                         </div>
-                                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => alert('Đăng xuất')}>Đăng xuất</button>
+                                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => {
+                                            localStorage.clear();
+                                            router.push('/login');
+                                        }}>Đăng xuất</button>
                                     </div>
                                 )}
                             </div>
@@ -85,17 +90,13 @@ function Footer() {
                         <Facebook className="h-6 w-6" />
                     </Link>
                     <Link href="#" className="text-gray-400 hover:text-gray-500">
-                        <span className="sr-only">Youtube</span>
-                        <Youtube className="h-6 w-6" />
-                    </Link>
-                    <Link href="#" className="text-gray-400 hover:text-gray-500">
                         <span className="sr-only">GitHub</span>
                         <Github className="h-6 w-6" />
                     </Link>
                 </div>
                 <div className="mt-8 md:mt-0 md:order-1">
                     <p className="text-center text-base text-gray-400">
-                        &copy; 2023 SFIT, Inc. All rights reserved.
+                        &copy; 2024 SFIT, Inc. All rights reserved.
                     </p>
                 </div>
             </div>

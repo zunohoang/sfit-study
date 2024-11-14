@@ -48,6 +48,7 @@ export default function Home() {
         startDate: '',
         code: '',
     })
+    const [loading, setLoading] = useState<boolean>(true)
     const router = useRouter();
 
     const [classCode, setClassCode] = useState('')
@@ -66,6 +67,7 @@ export default function Home() {
             if (data.success) {
                 console.log(data.data.classrooms);
                 setClasses(data.data.classrooms);
+                setLoading(false);
             }
         }
 
@@ -119,6 +121,13 @@ export default function Home() {
     }
     return (
         <main className="flex-grow">
+            {
+                loading && (
+                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-75 h-screen">
+                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+                    </div>
+                )
+            }
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="px-4 py-6 sm:px-0">
                     <div className="flex flex-wrap gap-4 justify-between items-center mb-6">

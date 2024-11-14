@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
 import Class from '@/models/Classroom';
+import Assignment from '@/models/Assignment';
 
 
 export async function POST(request: Request) {
@@ -58,6 +59,28 @@ export async function GET(request: Request) {
 
         if (user.role != 'ADMIN') {
             return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+        }
+
+        const url = new URL(request.url);
+        const searchParams = url.searchParams;
+        const id = searchParams.get('id');
+        if (id) {
+            const classroom = await Class.findById(id).populate({
+                path: 'assignments',
+                model: Assignment
+            }).populate({
+                path: 'students',
+                model: User
+            });
+            if (classroom) {
+                return NextResponse.json({
+                    success: true, data: {
+                        classroom: classroom
+                    }
+                }, { status: 200 });
+            } else {
+                return NextResponse.json({ success: false }, { status: 400 });
+            }
         }
 
         const classrooms = await Class.find();

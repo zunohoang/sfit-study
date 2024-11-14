@@ -16,16 +16,16 @@ import 'prismjs/themes/prism.css'
 // Mock data for the class details
 const classDetailsV1 = {
     id: 1,
-    name: 'Lập trình Web với React',
-    description: 'Học cách xây dựng ứng dụng web hiện đại với React và các công nghệ liên quan.',
-    instructor: 'Nguyễn Văn A',
-    duration: '8 tuần',
+    name: 'Đang loading... máy chủ yếu',
+    description: '.',
+    instructor: '',
+    duration: '',
     students: 25,
-    startDate: '15/01/2024',
+    startDate: '',
     sessions: [
-        { id: 1, title: 'Giới thiệu về React', date: '15/01/2024', time: '19:00 - 21:00' },
-        { id: 2, title: 'Components và Props', date: '22/01/2024', time: '19:00 - 21:00' },
-        { id: 3, title: 'State và Lifecycle', date: '29/01/2024', time: '19:00 - 21:00' },
+        { id: 1, title: '', date: '15/01/2024', time: '19:00 - 21:00' },
+        { id: 2, title: '', date: '22/01/2024', time: '19:00 - 21:00' },
+        { id: 3, title: '', date: '29/01/2024', time: '19:00 - 21:00' },
     ],
     announcements: [
         { id: 1, title: 'Chào mừng đến với khóa học!', content: 'Chúng ta sẽ bắt đầu vào tuần tới. Hãy chuẩn bị sẵn sàng!', date: '10/01/2024' },
@@ -39,24 +39,24 @@ const classDetailsV1 = {
     assignments: [
         {
             id: 1,
-            title: 'Tạo component đầu tiên',
+            title: '',
             dueDate: '21/01/2024',
-            description: 'Tạo một component React đơn giản hiển thị thông tin cá nhân.',
+            description: '.',
             subTasks: [
-                { id: 1, title: 'Câu 1', description: 'Copy câu 1 dán vào đây' },
-                { id: 2, title: 'Câu 2', description: 'Thêm props cho tên, tuổi, và sở thích' },
-                { id: 3, title: 'Câu 3', description: 'Sử dụng CSS module để tạo style cho component' },
+                { id: 1, title: 'Câu 1', description: '' },
+                { id: 2, title: 'Câu 2', description: '' },
+                { id: 3, title: 'Câu 3', description: '' },
             ]
         },
         {
             id: 2,
-            title: 'Xây dựng ứng dụng Todo',
-            dueDate: '28/01/2024',
-            description: 'Xây dựng một ứng dụng Todo sử dụng React hooks.',
+            title: '',
+            dueDate: '',
+            description: '.',
             subTasks: [
-                { id: 1, title: 'Tạo component TodoList', description: 'Tạo một component để hiển thị danh sách các todo' },
-                { id: 2, title: 'Thêm chức năng thêm todo', description: 'Tạo form và xử lý việc thêm todo mới' },
-                { id: 3, title: 'Thêm chức năng xóa todo', description: 'Thêm nút và xử lý việc xóa todo' },
+                { id: 1, title: '', description: '' },
+                { id: 2, title: '', description: '' },
+                { id: 3, title: '', description: '' },
             ]
         },
     ],
@@ -80,6 +80,7 @@ export default function ClassDetails() {
     const [classDetails, setClassDetails] = useState<any>(classDetailsV1)
     const pathName = usePathname();
     const classroomId = pathName.split('/')[2];
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function callApiClasses() {
@@ -117,6 +118,7 @@ export default function ClassDetails() {
                         return newSubTaskCode
                     })
                     setClassDetails(classroom);
+                    setLoading(false);
                 }
             }
         }
@@ -151,6 +153,7 @@ export default function ClassDetails() {
     }
 
     const submitCode = async (assignmentId: any) => {
+        setLoading(true);
         console.log(subTaskCode);
         // get id in subtask
         const subTask: any = subTaskCode[assignmentId];
@@ -180,13 +183,22 @@ export default function ClassDetails() {
             } else {
                 alert('Nộp bài thất bại');
             }
+            setLoading(false);
         } catch (error) {
             alert('Nộp bài thât bại')
+            setLoading(false);
         }
     }
 
     return (
         <main className="flex-grow bg-gray-100">
+            {
+                loading && (
+                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-75 h-screen">
+                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+                    </div>
+                )
+            }
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="px-4 py-6 sm:px-0">
                     <div className="flex items-center mb-6">

@@ -25,7 +25,10 @@ export async function GET(request: Request) {
         if (url.searchParams.get('id')) {
             const id: any = url.searchParams.get('id');
             console.log(id);
-            const classroom: any = await Classroom.findOne({ _id: id }).populate('assignments');
+            const classroom: any = await Classroom.findOne({ _id: id }).populate({
+                path: 'assignments',
+                model: Assignment
+            });
             let codes: Array<any> = [];
             for (let i = 0; i < classroom.assignments.length; i++) {
                 const assignment = classroom.assignments[i];

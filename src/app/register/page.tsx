@@ -13,6 +13,7 @@ export default function Component() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [team, setTeam] = useState('')
     const router = useRouter();
 
     const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +38,9 @@ export default function Component() {
             case 'confirmPassword':
                 setConfirmPassword(value);
                 break;
+            case 'team':
+                setTeam(value);
+                break;
         }
     }
 
@@ -52,10 +56,11 @@ export default function Component() {
         // Simulating an API call
         const response = await axios.post('/api/register', {
             email: email,
-            password,
+            password: password,
             fullName: name,
-            loptruong,
-            msv: studentId
+            loptruong: loptruong,
+            msv: studentId,
+            team: team
         });
 
         const data = response.data;
@@ -87,6 +92,9 @@ export default function Component() {
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">Họ và tên</label>
                             <input
                                 id="name"
+                                name="name"
+                                onChange={onChangeInput}
+                                value={name}
                                 className="py-2 px-3 h-10 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
                                 placeholder="Nguyễn Văn A"
                                 required
@@ -97,6 +105,9 @@ export default function Component() {
                                 <label htmlFor="loptruong" className="block text-sm font-medium text-gray-700">Lớp (Ở trường)</label>
                                 <input
                                     id="loptruong"
+                                    name="loptruong"
+                                    onChange={onChangeInput}
+                                    value={loptruong}
                                     className="py-2 px-3 h-10 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
                                     placeholder="Lớp của bạn"
                                     required
@@ -106,6 +117,9 @@ export default function Component() {
                                 <label htmlFor="studentId" className="block text-sm font-medium text-gray-700">Mã sinh viên</label>
                                 <input
                                     id="studentId"
+                                    name="studentId"
+                                    onChange={onChangeInput}
+                                    value={studentId}
                                     className="py-2 px-3 h-10 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
                                     placeholder="123456789"
                                     required
@@ -116,6 +130,9 @@ export default function Component() {
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                             <input
                                 id="email"
+                                name="email"
+                                onChange={onChangeInput}
+                                value={email}
                                 className="py-2 px-3 h-10 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
                                 placeholder="example@gmail.com"
                                 required
@@ -127,6 +144,9 @@ export default function Component() {
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
                                 <input
                                     id="password"
+                                    name="password"
+                                    onChange={onChangeInput}
+                                    value={password}
                                     className="py-2 px-3 h-10 mt-1 block w-full rounded-md border-gray-400 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
                                     required
                                     type="password"
@@ -136,6 +156,9 @@ export default function Component() {
                                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
                                 <input
                                     id="confirmPassword"
+                                    name="confirmPassword"
+                                    onChange={onChangeInput}
+                                    value={confirmPassword}
                                     className="py-2 px-3 h-10 mt-1 block w-full rounded-md border-gray-400 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
                                     required
                                     type="password"

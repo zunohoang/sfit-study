@@ -7,9 +7,8 @@ export async function POST(request: Request) {
     const { email, password } = await request.json()
 
     console.log(email, password);
-    const user = await User.findOne({ email, password });
-    console.log(user)
-
+    const user = await User.findOne({ email: email, password: password });
+    console.log(user);
     if (user) {
         return NextResponse.json({ message: 'Đăng nhập thành công', code: true, user: user }, { status: 200 });
     }

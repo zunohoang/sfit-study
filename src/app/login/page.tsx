@@ -25,9 +25,12 @@ export default function LoginPage() {
             setIsLoading(false);
             localStorage.setItem('email', email);
             localStorage.setItem('fullName', response.data.user.fullName);
+            localStorage.setItem('team', response.data.user.team);
+            localStorage.setItem('msv', response.data.user.msv);
+            localStorage.setItem('loptruong', response.data.user.loptruong);
             localStorage.setItem('role', response.data.user.role);
             localStorage.setItem('password', password);
-            router.push('/classrooms')
+            router.push('/classes')
         } else {
             setIsLoading(false)
             alert('Sai tên người dùng hoặc mật khẩu')
@@ -55,7 +58,7 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-b from-green-50 to-white lg:grid lg:grid-cols-2">
-            <div className="flex items-center justify-center px-8 py-12 md:px-12">
+            <div className="flex items-center justify-center px-8 py-12 md:px-12 order-2">
                 <div className="mx-auto w-full max-w-sm space-y-6">
                     <div className="space-y-2 text-center">
                         <h1 className="text-4xl font-bold tracking-tighter text-green-600">SFIT</h1>
@@ -69,6 +72,7 @@ export default function LoginPage() {
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                             <input
                                 id="email"
+                                name="email"
                                 value={email}
                                 onChange={onChangeInput}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 py-2 px-3 h-10"
@@ -81,6 +85,7 @@ export default function LoginPage() {
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
                             <input
                                 id="password"
+                                name="password"
                                 value={password}
                                 onChange={onChangeInput}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 py-2 px-3 h-10"
@@ -130,7 +135,7 @@ export default function LoginPage() {
                 </div>
             </div>
             <div className="hidden lg:block">
-                <div className="h-full bg-[url('/bgclb.jpg')] bg-cover bg-center bg-no-repeat" />
+                <div className="h-full bg-[url('/bgclb.jpg')] bg-cover bg-center bg-no-repeat order-1" />
             </div>
         </div>
     )

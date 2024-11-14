@@ -7,12 +7,11 @@ const userSchema = new mongoose.Schema({
     email: { type: String },
     loptruong: { type: String },
     msv: { type: String },
+    team: { type: String },
     classroom: {
         type: [
-            {
-                classId: { type: mongoose.Schema.Types.ObjectId, ref: 'Classroom' },
-            }
-        ]
+            { type: mongoose.Schema.Types.ObjectId, ref: 'Classroom' },
+        ], default: []
     },
 })
 

@@ -19,6 +19,9 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
 
 // Header component
 function Header() {
+
+    const [showMenu, setShowMenu] = useState(false);
+
     return (
         <header className="bg-white shadow">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,14 +31,11 @@ function Header() {
                             <span className="text-2xl font-bold text-green-600">SFIT</span>
                         </Link>
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <Link href="/admins/classes" className="border-green-500 text-gray-900 inline-flex items-center p-5 border-b-2 text-sm font-medium">
-                                Quản lý lớp học
+                            <Link href="/classes" className="border-green-500 text-gray-900 inline-flex items-center p-5 border-b-2 text-sm font-medium">
+                                Lớp học
                             </Link>
-                            <Link href="/admins/users" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Quản lý người dùng
-                            </Link>
-                            <Link href="/admins/news" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Quản lý Bảng tin
+                            <Link href="/news" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Bảng tin
                             </Link>
                             <Link href="https://github.com/zunohoang" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Liên hệ
@@ -49,16 +49,28 @@ function Header() {
                         </button>
                         <div className="ml-3 relative">
                             <div>
-                                <button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <div className="relative"></div>
+                                <button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onClick={() => setShowMenu(!showMenu)}>
                                     <span className="sr-only">Mở menu người dùng</span>
                                     <User className="h-8 w-8 rounded-full" />
                                 </button>
+                                {showMenu && (
+                                    <div className="z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
+                                        <div className="block px-4 py-2 text-sm text-gray-700">
+                                            <p className="font-medium">Người dùng: {localStorage.getItem('fullName')}</p>
+                                            <p className="text-gray-500">{localStorage.getItem('team')}</p>
+                                            <p className="text-gray-500">{localStorage.getItem('msv')}</p>
+                                            <p className="text-gray-500">{localStorage.getItem('loptruong')}</p>
+                                        </div>
+                                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => alert('Đăng xuất')}>Đăng xuất</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
 

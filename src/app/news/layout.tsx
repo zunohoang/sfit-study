@@ -28,14 +28,11 @@ function Header() {
                             <span className="text-2xl font-bold text-green-600">SFIT</span>
                         </Link>
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <Link href="/admins/classes" className="border-green-500 text-gray-900 inline-flex items-center p-5 border-b-2 text-sm font-medium">
-                                Quản lý lớp học
+                            <Link href="/classes" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Lớp học
                             </Link>
-                            <Link href="/admins/users" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Quản lý người dùng
-                            </Link>
-                            <Link href="/admins/news" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Quản lý Bảng tin
+                            <Link href="/news" className="border-green-500 text-gray-900 inline-flex items-center p-5 border-b-2 text-sm font-medium">
+                                Bản tin
                             </Link>
                             <Link href="https://github.com/zunohoang" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Liên hệ

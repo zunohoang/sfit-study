@@ -28,7 +28,8 @@ export async function GET(request: Request) {
 
             const classroom: any = await Classroom.findOne({ _id: id }).populate({
                 path: 'assignments',
-                model: Assignment
+                model: Assignment,
+                options: { sort: { createdAt: -1 } } // Sort assignments by createdAt in descending order
             }).populate({
                 path: 'students',
                 model: User,

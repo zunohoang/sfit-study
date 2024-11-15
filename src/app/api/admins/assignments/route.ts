@@ -21,14 +21,21 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
-        if (user.role != 'ADMIN') {
+        if (user.role != 'ADMIN' && user.role != 'TEACHER') {
             return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
         }
 
         // tao assignment
         const { classroomId, title, description, deadline, problems } = await request.json();
-        const assignment = new Assignment({ classroom: classroomId, title, description, deadline, problems });
         const classroom = await Class.findById(classroomId);
+
+        if (user.role == 'TEACHER') {
+            if (!classroom.teachers.includes(user._id)) {
+                return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+            }
+        }
+
+        const assignment = new Assignment({ classroom: classroomId, title, description, deadline, problems });
         classroom.assignments.push(assignment);
         classroom.save();
         const result = await assignment.save();
@@ -63,14 +70,21 @@ export async function GET(request: Request) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
-        if (user.role != 'ADMIN') {
+        if (user.role != 'ADMIN' && user.role != 'TEACHER') {
             return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
         }
 
+
         const url = new URL(request.url);
         if (url.searchParams.get('assignmentId')) {
+
             const assignmentId: any = url.searchParams.get('assignmentId');
-            const assignment = await Assignment.findById(assignmentId);
+            const assignment = await Assignment.findById(assignmentId).populate('classroom');
+
+            if (user.role == 'TEACHER' && !assignment.classroom.teachers.includes(user._id)) {
+                return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+            }
+
             const codes = await Code.find({ assignment: assignmentId }).populate('user');
             const temp = assignment.toJSON();
             temp.codes = codes;
@@ -82,6 +96,10 @@ export async function GET(request: Request) {
                     assignment: temp
                 }
             }, { status: 200 });
+        }
+
+        if (user.role == 'TEACHER') {
+            return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
         }
 
         const classroomId: any = url.searchParams.get('classroomId');

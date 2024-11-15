@@ -16,23 +16,6 @@ export default function Component() {
     const [team, setTeam] = useState('')
     const router = useRouter();
 
-    useEffect(() => {
-        if (localStorage.getItem('email') && localStorage.getItem('password')) {
-            const check = confirm('Phiên sử dụng của bận chưa hết hạn, bạn có muốn đăng xuất để đăng kí tài khoản khác không?\nChọn "OK" để đăng xuất rồi đăng kí lại hoặc "Cancel" để tiếp tục sử dụng tài khoản đã từng đăng nhập');
-            if (check) {
-                localStorage.removeItem('email');
-                localStorage.removeItem('fullName');
-                localStorage.removeItem('team');
-                localStorage.removeItem('msv');
-                localStorage.removeItem('loptruong');
-                localStorage.removeItem('role');
-                localStorage.removeItem('password');
-            } else {
-                router.push('/classes')
-            }
-        }
-    }, [])
-
     const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         const key = event.target.id;
         const value = event.target.value;

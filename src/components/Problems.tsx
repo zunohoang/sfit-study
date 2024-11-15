@@ -71,8 +71,8 @@ export default function Problems({ assignments, classrooms }: any) {
         <div className="px-4 py-5 sm:p-6">
             <h2 className='text-lg font-semibold text-green-500 mb-4'>Danh sách bài tập</h2>
             <ul className="flex flex-col gap-4">
-                {assignments && assignments.map((assignment: any) => (
-                    <li key={assignment._id} className="bg-white shadow overflow-hidden sm:rounded-lg">
+                {assignments && assignments.map((assignment: any, index: number) => (
+                    <li key={index} className="bg-white shadow overflow-hidden sm:rounded-lg">
                         <div className="px-4 py-5 sm:px-6">
                             <div className="flex items-center justify-between">
                                 <div>

@@ -49,6 +49,28 @@ export default function Home() {
             if (data.success) {
                 console.log(data.data.classrooms);
                 setClasses(data.data.classrooms);
+
+                if (localStorage.getItem('role') == 'ADMIN' || localStorage.getItem('role') == 'TEACHER') {
+                    const response: any = await axios.get('/api/admins/classes', {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+                        }
+                    });
+
+                    const data = response.data;
+
+                    if (data.success) {
+                        console.log(data.data.classrooms);
+                        setClasses((pre: any) => {
+                            const newClasses = data.data.classrooms.filter((newClass: any) =>
+                                !pre.some((existingClass: any) => existingClass._id === newClass._id)
+                            );
+                            return [...pre, ...newClasses];
+                        });
+                    }
+                }
+
                 setLoading(false);
             }
         }
@@ -143,7 +165,9 @@ export default function Home() {
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="px-4 py-6 sm:px-0">
                     <div className="flex flex-wrap gap-4 justify-between items-center mb-6">
-                        <h1 className="text-3xl font-bold text-green-600">Các lớp học tại SFIT</h1>
+                        <div>
+                            <h1 className="text-3xl font-bold text-green-600">Các lớp học tại SFIT</h1>
+                        </div>
                         <div className='flex justify-center items-center gap-2 scale-75 sm:scale-100 -ml-10 sm:ml-0'>
                             <input type="text" name="classCode" id="classCode"
                                 value={classCode}
@@ -160,8 +184,8 @@ export default function Home() {
                     </div>
 
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {classes.map((classItem: any) => (
-                            <div key={classItem._id} className="bg-white overflow-hidden shadow rounded-lg">
+                        {classes.map((classItem: any, index: number) => (
+                            <div key={index} className="bg-white overflow-hidden shadow rounded-lg">
                                 <div className="px-4 py-5 sm:p-6">
                                     <h3 className="text-lg leading-6 font-medium text-gray-900">{classItem.title}</h3>
                                     <DisplayContent content={classItem.description} className={'mt-1 max-w-2xl text-sm text-gray-500'} />

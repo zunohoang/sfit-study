@@ -8,10 +8,7 @@ const classroomSchema = new mongoose.Schema({
     description: { type: String },
     teacher: { type: String },
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    members: [{
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        role: { type: String, default: 'STUDENT' }
-    }],
+    teachers: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] },
     time: { type: String },
     studentNum: { type: Number },
     assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }],

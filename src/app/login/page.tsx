@@ -11,23 +11,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
     const router = useRouter();
 
-    useEffect(() => {
-        if (localStorage.getItem('email') && localStorage.getItem('password')) {
-            const check = confirm('Phiên sử dụng của bận chưa hết hạn, bạn có muốn đăng xuất để đăng nhập tài khoản khác không?\nChọn "OK" để đăng xuất rồi đăng nhập lại hoặc "Cancel" để tiếp tục sử dụng tài khoản đã từng đăng nhập');
-            if (check) {
-                localStorage.removeItem('email');
-                localStorage.removeItem('fullName');
-                localStorage.removeItem('team');
-                localStorage.removeItem('msv');
-                localStorage.removeItem('loptruong');
-                localStorage.removeItem('role');
-                localStorage.removeItem('password');
-            } else {
-                router.push('/classes')
-            }
-        }
-    }, [])
-
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
@@ -49,7 +32,11 @@ export default function LoginPage() {
                 localStorage.setItem('loptruong', response.data.user.loptruong);
                 localStorage.setItem('role', response.data.user.role);
                 localStorage.setItem('password', password);
-                router.push('/classes')
+                if (response.data.user.role == 'ADMIN') {
+                    router.push('/admins/classes')
+                } else {
+                    router.push('/classes')
+                }
             } else {
                 setIsLoading(false)
                 alert('Sai tên người dùng hoặc mật khẩu')

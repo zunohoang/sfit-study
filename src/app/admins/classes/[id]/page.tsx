@@ -740,6 +740,16 @@ export default function ManageClass() {
         const password = localStorage.getItem('password');
         try {
             console.log(newProblem)
+
+            if (newProblem.problems.length == 0 || newProblem.title == '' || newProblem.description == '' || newProblem.deadline == '') {
+                alert('Vui lòng điền đầy đủ thông tin')
+                return;
+            }
+
+            const check = confirm('Bạn có chắc chắn muốn thêm bài tập này?');
+
+            if (!check) return;
+
             const response = await axios.post('/api/admins/assignments', {
                 title: newProblem.title,
                 description: newProblem.description,

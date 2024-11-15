@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Book, Clock, Users, CalendarDays, MessageSquare, Code, ChevronLeft, ChevronDown, ChevronUp, Bell, User, Facebook, Youtube, Github } from 'lucide-react'
+import { Book, Clock, Users, CalendarDays, MessageSquare, Code, ChevronLeft, ChevronDown, ChevronUp, Bell, User, Facebook, Youtube, Github, Plus } from 'lucide-react'
 import DisplayContent from '@/components/DisplayContent'
 import axios from 'axios'
 import { useRouter, usePathname } from "next/navigation";
@@ -13,7 +13,10 @@ import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
 import 'prismjs/themes/prism.css'
 import AlertModel from '@/components/AlertModel'
+import TextEditor from '@/components/EditerContent'
+import Problems from '@/components/Problems'
 import { set } from 'mongoose'
+
 
 // Mock data for the class details
 const classDetailsV1 = {
@@ -90,7 +93,7 @@ export default function ClassDetails() {
     const [messageModel, setMessageModel] = useState('')
     const [typeModel, setTypeModel] = useState<'success' | 'warning' | 'confirmation'>('confirmation')
     const [urlModel, setUrlModel] = useState('')
-
+    const [role, setRole] = useState('')
 
     useEffect(() => {
         async function callApiClasses() {
@@ -134,6 +137,7 @@ export default function ClassDetails() {
         }
 
         callApiClasses();
+        setRole(localStorage.getItem('role') || '');
     }, []);
 
     const TabButton = ({ id, label }: TabButtonProps) => (
@@ -207,6 +211,61 @@ export default function ClassDetails() {
             setLoading(false);
             setTitleModel('Thất bại');
             setMessageModel('Nộp bài thất bại hãy thử lại sau ít phút');
+            setTypeModel('warning');
+            setUrlModel('');
+            setIsModalOpen(true);
+        }
+    }
+
+    const [newProblem, setNewProblem] = useState<any>({
+        title: '',
+        description: '',
+        deadline: '',
+        classroomId: null,
+        problems: []
+    })
+
+    const addAssignment = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+        console.log(newProblem);
+        try {
+            const email: any = localStorage.getItem('email');
+            const password: any = localStorage.getItem('password');
+            newProblem.classroomId = classroomId;
+            const response: any = await axios.post('/api/admins/assignments', {
+                classroomId: classroomId,
+                title: newProblem.title,
+                deadline: newProblem.deadline,
+                description: newProblem.description,
+                problems: newProblem.problems
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${btoa(`${email}:${password}`)}`
+                }
+            })
+            const data: any = response.data;
+            console.log(data);
+            if (data.success) {
+                setLoading(false);
+                setTitleModel('Thành công');
+                setMessageModel('Tạo bài tập thành công ấn tiếp tục để tiếp tục');
+                setTypeModel('success');
+                setUrlModel('/classes/' + classroomId);
+                setIsModalOpen(true);
+            } else {
+                setLoading(false);
+                setTitleModel('Thất bại');
+                setMessageModel('Tạo bài tập thất bại hãy thử lại sau ít phút');
+                setTypeModel('warning');
+                setUrlModel('');
+                setIsModalOpen(true);
+            }
+        } catch (error) {
+            setLoading(false);
+            setTitleModel('Thất bại');
+            setMessageModel('Tạo bài tập thất bại hãy thử lại sau ít phút');
             setTypeModel('warning');
             setUrlModel('');
             setIsModalOpen(true);
@@ -409,92 +468,192 @@ export default function ClassDetails() {
                         )}
 
                         {activeTab === 'assignments' && (
-                            <ul className="divide-y divide-gray-200">
-                                {classDetails.assignments && classDetails.assignments.map((assignment: any, index: number) => (
-                                    <li key={index}>
-                                        <div className="px-4 py-4 sm:px-6">
-                                            <div className="flex items-center justify-between">
-                                                <div className='flex'>
-                                                    <p className="text-sm font-medium text-green-600 truncate">{assignment.title}</p>
+                            <div>
+                                <ul className="divide-y divide-gray-200">
+                                    {classDetails.assignments && classDetails.assignments.map((assignment: any, index: number) => (
+                                        <li key={index}>
+                                            <div className="px-4 py-4 sm:px-6">
+                                                <div className="flex items-center justify-between">
+                                                    <div className='flex'>
+                                                        <p className="text-sm font-medium text-green-600 truncate">{assignment.title}</p>
+                                                    </div>
+                                                    <div className="ml-2 flex-shrink-0 flex">
+                                                        <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                            Hạn nộp: {assignment.deadline}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div className="ml-2 flex-shrink-0 flex">
-                                                    <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Hạn nộp: {assignment.deadline}
-                                                    </p>
+                                                <div className="mt-2">
+                                                    {/* <div className="text-sm text-gray-500" dangerouslySetInnerHTML={assignment.description}></div> */}
+                                                    <DisplayContent content={assignment.description} className={'text-sm text-gray-500'} />
                                                 </div>
-                                            </div>
-                                            <div className="mt-2">
-                                                {/* <div className="text-sm text-gray-500" dangerouslySetInnerHTML={assignment.description}></div> */}
-                                                <DisplayContent content={assignment.description} className={'text-sm text-gray-500'} />
-                                            </div>
-                                            <div className="mt-2 flex items-center gap-3">
-                                                <button
-                                                    onClick={() => handleAssignmentToggle(assignment._id)}
-                                                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                                >
-                                                    {expandedAssignment === assignment._id ? (
-                                                        <>
-                                                            <ChevronUp className="mr-2 h-4 w-4" />
-                                                            Ẩn bài tập con
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <ChevronDown className="mr-2 h-4 w-4" />
-                                                            Xem bài tập con
-                                                        </>
-                                                    )}
-                                                </button>
-                                                {
-                                                    subTaskCode[assignment._id] ? (
-                                                        <p className="text-sm font-medium text-green-900 bg-green-200 px-2 rounded-xl">Đã làm</p>
-                                                    ) : (
-                                                        <p className="text-sm font-medium text-red-900 bg-red-200 px-2 rounded-xl">Chưa làm</p>
-                                                    )
-                                                }
-                                            </div>
-                                            {expandedAssignment === assignment._id && (
-                                                <div className="mt-4 space-y-4 flex flex-col">
-                                                    {assignment.problems.map((subTask: any, index: any) => (
-                                                        <div key={index} className="border rounded-md p-4">
-                                                            {/* <h4 className="text-lg font-medium">{"Bài " + (index + 1)}</h4> */}
-                                                            {/* <p className="mt-1 text-sm text-gray-500">{subTask}</p> */}
-                                                            <DisplayContent content={subTask} />
-                                                            <div className='h-2'>
-                                                            </div>
-                                                            <p className='text-sm font-medium px-2 py-1 rounded-t-md border border-b-0 w-fit'> bai{index + 1}.c</p>
-                                                            {/* <textarea
+                                                <div className="mt-2 flex items-center gap-3">
+                                                    <button
+                                                        onClick={() => handleAssignmentToggle(assignment._id)}
+                                                        className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                                    >
+                                                        {expandedAssignment === assignment._id ? (
+                                                            <>
+                                                                <ChevronUp className="mr-2 h-4 w-4" />
+                                                                Ẩn bài tập con
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <ChevronDown className="mr-2 h-4 w-4" />
+                                                                Xem bài tập con
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                    {
+                                                        subTaskCode[assignment._id] ? (
+                                                            <p className="text-sm font-medium text-green-900 bg-green-200 px-2 rounded-xl">Đã làm</p>
+                                                        ) : (
+                                                            <p className="text-sm font-medium text-red-900 bg-red-200 px-2 rounded-xl">Chưa làm</p>
+                                                        )
+                                                    }
+                                                </div>
+                                                {expandedAssignment === assignment._id && (
+                                                    <div className="mt-4 space-y-4 flex flex-col">
+                                                        {assignment.problems.map((subTask: any, index: any) => (
+                                                            <div key={index} className="border rounded-md p-4">
+                                                                {/* <h4 className="text-lg font-medium">{"Bài " + (index + 1)}</h4> */}
+                                                                {/* <p className="mt-1 text-sm text-gray-500">{subTask}</p> */}
+                                                                <DisplayContent content={subTask} />
+                                                                <div className='h-2'>
+                                                                </div>
+                                                                <p className='text-sm font-medium px-2 py-1 rounded-t-md border border-b-0 w-fit'> bai{index + 1}.c</p>
+                                                                {/* <textarea
                                                                 className="mt-2 w-full h-32 p-2 border rounded-md"
                                                                 placeholder="Dán code của bạn ở đây..."
                                                                 value={subTaskCode[assignment._id]?.[index] || ''}
                                                                 onChange={(e) => handleCodeChange(assignment._id, index, e.target.value)}
                                                             /> */}
-                                                            <Editor
-                                                                value={subTaskCode[assignment._id]?.[index] || "#include <stdio.h>\nint main(){\n\n     return 0;\n}"}
-                                                                onValueChange={(code: any) => handleCodeChange(assignment._id, index, code)}
-                                                                highlight={(code: string) => highlight(code || "", languages.cpp, 'cpp')}
-                                                                padding={10}
-                                                                style={{
-                                                                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                                                                    fontSize: 14,
-                                                                }}
-                                                                className='border rounded-r-md rounded-b-md rounded-se-md outline-none'
-                                                            />
-                                                        </div>
-                                                    ))}
-                                                    <button
-                                                        onClick={() => submitCode(assignment._id)}
-                                                        className='bg-green-500 ml-auto hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center'
-                                                        onMouseDown={(e) => e.preventDefault()}
-                                                    >
-                                                        Nộp bài
-                                                    </button>
-                                                    <p className="text-sm text-gray-400">* Cẩn thận code lỏ</p>
+                                                                <Editor
+                                                                    value={subTaskCode[assignment._id]?.[index] || "#include <stdio.h>\nint main(){\n\n     return 0;\n}"}
+                                                                    onValueChange={(code: any) => handleCodeChange(assignment._id, index, code)}
+                                                                    highlight={(code: string) => highlight(code || "", languages.cpp, 'cpp')}
+                                                                    padding={10}
+                                                                    style={{
+                                                                        fontFamily: '"Fira code", "Fira Mono", monospace',
+                                                                        fontSize: 14,
+                                                                    }}
+                                                                    className='border rounded-r-md rounded-b-md rounded-se-md outline-none'
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                        <button
+                                                            onClick={() => submitCode(assignment._id)}
+                                                            className='bg-green-500 ml-auto hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center'
+                                                            onMouseDown={(e) => e.preventDefault()}
+                                                        >
+                                                            Nộp bài
+                                                        </button>
+                                                        <p className="text-sm text-gray-400">* Cẩn thận code lỏ</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                {(role == 'TEACHER' || role == 'ADMIN') && (<div>
+                                    <div className='h-[1px] bg-slate-300 mx-6 mt-6' ></div>
+
+                                    <div className="px-4 py-5 sm:p-6">
+                                        <h3 className="text-lg leading-6 font-medium text-green-500 mb-4">Tạo bài tập mới</h3>
+                                        <form onSubmit={addAssignment} className="mt-6">
+                                            <div className="grid grid-cols-1 gap-y-6 gap--x-4 sm:grid-cols-6">
+                                                <div className="sm:col-span-3">
+                                                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                                                        Tiêu đề
+                                                    </label>
+                                                    <div className="mt-1">
+                                                        <input
+                                                            type="text"
+                                                            name="title"
+                                                            id="title"
+                                                            placeholder='Điền kiểu: Buổi 1 - Lệnh rẽ nhánh, Toán tử'
+                                                            value={newProblem.title}
+                                                            onChange={(e) => setNewProblem({ ...newProblem, title: e.target.value })}
+                                                            className="py-2 outline-none shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                        />
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                                                <div className="sm:col-span-2">
+                                                    <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700">
+                                                        Hạn nộp
+                                                    </label>
+                                                    <div className="mt-1">
+                                                        <input
+                                                            type="date"
+                                                            name="dueDate"
+                                                            id="dueDate"
+                                                            value={newProblem.deadline}
+                                                            onChange={(e) => setNewProblem({ ...newProblem, deadline: e.target.value })}
+                                                            className="py-2 shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="sm:col-span-6">
+                                                    <p className="block text-sm font-medium text-gray-700">
+                                                        Nội dung
+                                                    </p>
+                                                    <div className="mt-1">
+                                                        {/* <textarea
+                                                        id="description"
+                                                        name="description"
+                                                        rows={3}
+                                                        className="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                        value={newAssignment.description}
+                                                        onChange={(e) => handleInputChange(e, setNewAssignment)}
+                                                    /> */}
+                                                        <TextEditor content={newProblem.description} setContent={(value) => setNewProblem((pre: any) => {
+                                                            return { ...pre, description: value }
+                                                        })} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className=''>
+                                                <div className='flex'>
+                                                    <h1 className='text-sm font-medium text-gray-700'>Bài tập con</h1>
+                                                </div>
+                                                <div className="mt-2 rounded-md bg-gray-100 p-4">
+                                                    {
+                                                        newProblem.problems && newProblem.problems.map((problem: any, index: any) => (
+                                                            <div key={index} className="bg-white p-2 my-2 rounded-md">
+                                                                <p className="text-sm font-medium text-gray-700">Bài {index + 1}</p>
+                                                                <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                                                                    Nội dung
+                                                                </label>
+                                                                <div className="mt-1">
+                                                                    <TextEditor content={problem} setContent={(value) => setNewProblem((prev: any) => ({ ...prev, problems: prev.problems.map((p: any, i: any) => i === index ? value : p) }))} />
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                    <div className='w-fit flex items-center gap-2 text-gray-100 p-2 rounded-md ml-2 bg-green-500' onClick={() => setNewProblem((newProblem: any) => {
+                                                        return { ...newProblem, problems: [...newProblem.problems, 'Bài....'] }
+                                                    })}>
+                                                        <Plus className='h-5 w-5' />
+                                                        Thêm bài tập con
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mt-6 flex justify-end">
+                                                <button
+                                                    type="submit"
+                                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" >
+                                                    <Plus className="mr-2 h-5 w-5" />
+                                                    Thêm bài tập
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <br />
+                                    </div>
+                                    <div className='h-[1px] bg-slate-300 mx-6' ></div>
+                                    <Problems assignments={classDetails.assignments} classrooms={classDetails} />
+                                </div>)}
+                            </div>
                         )}
                     </div>
                 </div>

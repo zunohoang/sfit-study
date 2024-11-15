@@ -52,6 +52,18 @@ export default function ManageClasses() {
         try {
             const email = localStorage.getItem('email')
             const password = localStorage.getItem('password')
+
+            if (!newClass.title || !newClass.teacher || !newClass.time || !newClass.studentNum || !newClass.teachers) {
+                alert('Vui lòng điền đầy đủ thông tin')
+                return
+            }
+
+            const check = confirm('Bạn có chắc chắn muốn thêm lớp học này?');
+
+            if (!check) return
+
+            newClass.teachers = newClass.teachers.split(',').map((t: string) => t.trim())
+
             const res = await axios.post('/api/admins/classes', newClass, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,6 +145,19 @@ export default function ManageClasses() {
                                         value={newClass.studentNum}
                                         onChange={handleInputChange}
                                         required
+                                        className="p-2 mt-1 focus:ring-green-500 focus:border-green-500 w-full shadow-sm shadow-gray-300 sm:text-sm border-gray-400 rounded-md"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="teachers" className="block text-sm font-medium text-gray-700">Email giảng viên (Tài khoản quản lý lớp)</label>
+                                    <input
+                                        type="text"
+                                        name="teachers"
+                                        id="teachers"
+                                        value={newClass.teachers}
+                                        onChange={handleInputChange}
+                                        required
+                                        placeholder='Ví dụ muốn 3 tài khoản thì để: email1, email2, email 3'
                                         className="p-2 mt-1 focus:ring-green-500 focus:border-green-500 w-full shadow-sm shadow-gray-300 sm:text-sm border-gray-400 rounded-md"
                                     />
                                 </div>

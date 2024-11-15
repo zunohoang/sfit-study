@@ -24,8 +24,24 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
         }
 
-        const { title, description, teacher, students, time, studentNum } = await request.json();
-        const classroom = new Class({ title, description, teacher, students, time, studentNum });
+        const { title, description, teacher, students, time, studentNum, teachers } = await request.json();
+
+        for (let i = 0; i < teachers.length; i++) {
+            // check if teacher is valid
+            const teacher: any = await User.findOne({
+                email: teachers[i]
+            });
+            console.log(teacher);
+            if (!teacher) {
+                return NextResponse.json({ success: false, message: 'Teacher not found' }, { status: 400 });
+            }
+
+            teachers[i] = teacher._id
+            teacher.role = 'TEACHER';
+            teacher.save();
+        }
+
+        const classroom = new Class({ title, description, teacher, students, time, studentNum, teachers });
         const room = await classroom.save();
 
         if (room) {
@@ -55,6 +71,20 @@ export async function GET(request: Request) {
         const user = await User.findOne({ email: email, password: password });
         if (!user) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (user.role == 'TEACHER') {
+            const classrooms = await Class.find({ teachers: user._id }).populate({ path: 'assignments', model: Assignment }).populate({ path: 'students', model: User });
+
+            if (classrooms) {
+                return NextResponse.json({
+                    success: true, data: {
+                        classrooms: classrooms
+                    }
+                }, { status: 200 });
+            } else {
+                return NextResponse.json({ success: false }, { status: 400 });
+            }
         }
 
         if (user.role != 'ADMIN') {

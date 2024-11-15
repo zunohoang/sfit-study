@@ -2,7 +2,7 @@
 
 import { Menu, Plus, Settings, Home, Calendar, GraduationCap, HelpCircle, Baby, UserCheck } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Bell, Book, Github, User, Users, Facebook } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -24,6 +24,20 @@ function Header() {
     const [showMenu, setShowMenu] = useState(false);
     const router = useRouter();
 
+    const [fullName, setFullName] = useState('');
+    const [role, setRole] = useState('');
+    const [team, setTeam] = useState('');
+    const [msv, setMsv] = useState('');
+    const [loptruong, setLoptruong] = useState('');
+
+    useEffect(() => {
+        setFullName(localStorage.getItem('fullName') || '');
+        setRole(localStorage.getItem('role') || '');
+        setTeam(localStorage.getItem('team') || '');
+        setMsv(localStorage.getItem('msv') || '');
+        setLoptruong(localStorage.getItem('loptruong') || '');
+    }, [])
+
     return (
         <header className="bg-white shadow">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,17 +58,20 @@ function Header() {
                             </Link>
                         </div>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-1">
                         <button className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             <span className="sr-only">Xem thông báo</span>
                             <Bell className="h-6 w-6" />
                         </button>
+                        <p className='text-green-900 bg-green-400 px-2 rounded-xl'>{role}</p>
+                        <p className='hidden md:block'>|</p>
+                        <p className='hidden md:block text-green-700 font-medium'>{fullName}</p>
                         <div className="ml-3 relative">
                             <div>
                                 <div className="relative"></div>
                                 <button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onClick={() => setShowMenu(!showMenu)}>
                                     <span className="sr-only">Mở menu người dùng</span>
-                                    <User className="h-8 w-8 rounded-full" />
+                                    <User className="h-8 w-8 rounded-full text-white bg-green-600 p-1" />
                                 </button>
                                 {showMenu && (
                                     <div className="z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">

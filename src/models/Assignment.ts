@@ -6,6 +6,7 @@ const assignmentSchema = new mongoose.Schema({
     deadline: { type: String },
     problems: { type: [String] },
     classroom: { type: mongoose.Schema.Types.ObjectId, ref: 'Classroom' },
+    createdAt: { type: Date, default: Date.now },
 })
 
 const Assignment = mongoose.models.Assignment || mongoose.model('Assignment', assignmentSchema)

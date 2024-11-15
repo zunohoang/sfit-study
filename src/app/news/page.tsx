@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import DisplayContent from '@/components/DisplayContent';
 import axios from 'axios';
-import { set } from 'mongoose';
+import { useRouter } from 'next/navigation';
 
 interface NewsArticle {
     id: number;
@@ -14,8 +14,14 @@ interface NewsArticle {
 
 const NewsPage: React.FC = () => {
     const [articles, setArticles] = useState<NewsArticle[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const router = useRouter();
 
     useEffect(() => {
+        if (localStorage.getItem('email') == null || localStorage.getItem('password') == null) {
+            router.push('/login');
+            return;
+        }
         setArticles([
             {
                 id: 1,

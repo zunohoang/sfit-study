@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from 'axios'
 import { useRouter } from "next/navigation"
 
@@ -15,6 +15,23 @@ export default function Component() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [team, setTeam] = useState('')
     const router = useRouter();
+
+    useEffect(() => {
+        if (localStorage.getItem('email') && localStorage.getItem('password')) {
+            const check = confirm('Phiên sử dụng của bận chưa hết hạn, bạn có muốn đăng xuất để đăng kí tài khoản khác không?\nChọn "OK" để đăng xuất rồi đăng kí lại hoặc "Cancel" để tiếp tục sử dụng tài khoản đã từng đăng nhập');
+            if (check) {
+                localStorage.removeItem('email');
+                localStorage.removeItem('fullName');
+                localStorage.removeItem('team');
+                localStorage.removeItem('msv');
+                localStorage.removeItem('loptruong');
+                localStorage.removeItem('role');
+                localStorage.removeItem('password');
+            } else {
+                router.push('/classes')
+            }
+        }
+    }, [])
 
     const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         const key = event.target.id;
@@ -78,6 +95,17 @@ export default function Component() {
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-b from-green-50 to-white lg:grid lg:grid-cols-2">
+            {
+                isLoading && (
+                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+                        <div className="text-green-700 fixed font-black animate-pulse">
+                            SFIT
+                        </div>
+                        <div className="animate-spin rounded-full h-20 w-20 border-r-2 fixed border-l-2 border-green-400"></div>
+                    </div>
+                )
+            }
             <div className="flex items-center justify-center px-8 py-12 md:px-12">
                 <div className="mx-auto w-full max-w-sm space-y-6">
                     <div className="space-y-2 text-center">

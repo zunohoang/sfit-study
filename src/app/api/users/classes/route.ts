@@ -25,10 +25,16 @@ export async function GET(request: Request) {
         if (url.searchParams.get('id')) {
             const id: any = url.searchParams.get('id');
             console.log(id);
+
             const classroom: any = await Classroom.findOne({ _id: id }).populate({
                 path: 'assignments',
                 model: Assignment
+            }).populate({
+                path: 'students',
+                model: User,
+                select: 'fullName _id loptruong'
             });
+
             let codes: Array<any> = [];
             for (let i = 0; i < classroom.assignments.length; i++) {
                 const assignment = classroom.assignments[i];
@@ -91,6 +97,7 @@ export async function POST(request: Request) {
         }
 
         classroom.students.push(user._id);
+
         await classroom.save();
         user.classroom.push(classroom._id);
         await user.save();

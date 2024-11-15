@@ -107,7 +107,7 @@ export default function ClassDetails() {
                         { id: 1, title: 'Chào mừng đến với lớp học!', content: 'Chúng ta sẽ bắt đầu vào tuần tới. Hãy chuẩn bị sẵn sàng!', date: '**/**/2024' },
                         { id: 2, title: 'Test', content: 'Phiên bản beta', date: '**/**/2024' },
                     ]
-                    classroom.students = []
+
                     setSubTaskCode((subTaskCode: any) => {
                         const newSubTaskCode: SubTaskCode = {}
                         // lay du lieu trong classroom.codes
@@ -194,8 +194,12 @@ export default function ClassDetails() {
         <main className="flex-grow bg-gray-100">
             {
                 loading && (
-                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-75 h-screen">
-                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+                        <div className="text-green-700 fixed font-black animate-pulse">
+                            SFIT
+                        </div>
+                        <div className="animate-spin rounded-full h-20 w-20 border-r-2 fixed border-l-2 border-green-400"></div>
                     </div>
                 )
             }
@@ -205,7 +209,7 @@ export default function ClassDetails() {
                         <Link href="/classes" className="mr-4">
                             <ChevronLeft className="h-6 w-6 text-gray-500" />
                         </Link>
-                        <h1 className="text-3xl font-bold text-gray-900">{classDetails.title}</h1>
+                        <h1 className="text-3xl font-bold text-green-600">{classDetails.title}</h1>
                     </div>
 
                     <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
@@ -238,9 +242,9 @@ export default function ClassDetails() {
                                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-500 flex items-center">
                                         <CalendarDays className="mr-2 h-5 w-5" />
-                                        Ngày bắt đầu
+                                        Khung
                                     </dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">**/**/2024</dd>
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">18:00 - 20:00</dd>
                                 </div>
                             </dl>
                         </div>
@@ -328,14 +332,38 @@ export default function ClassDetails() {
 
                         {activeTab === 'members' && (
                             <ul className="divide-y divide-gray-200">
+                                {
+                                    classDetails.teacher && classDetails.teacher.split(',').map((teacher: any, index: any) => (
+                                        <li key={index}>
+                                            <div className="px-4 py-4 sm:px-6">
+                                                <div className="flex items-center justify-between">
+                                                    <div className='flex items-center gap-2'>
+                                                        <User className="h-5 w-5 text-gray-600" />
+                                                        <p className="text-sm font-bold text-gray-600 truncate">{teacher.trim()}</p>
+                                                        <p className="text-sm font-medium text-gray-400 truncate">Ban chuyên môn</p>
+                                                    </div>
+                                                    <div className="ml-2 flex-shrink-0 flex">
+                                                        <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-300 text-green-800">
+                                                            Người đứng lớp
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))
+                                }
                                 {classDetails.students.map((member: any) => (
                                     <li key={member._id}>
                                         <div className="px-4 py-4 sm:px-6">
                                             <div className="flex items-center justify-between">
-                                                <p className="text-sm font-medium text-gray-900 truncate">{member.name}</p>
+                                                <div className='flex items-center gap-2'>
+                                                    <User className="h-5 w-5 text-gray-600" />
+                                                    <p className="text-sm font-medium text-gray-600 truncate">{member.fullName}</p>
+                                                    <p className="text-sm font-medium text-gray-400 truncate">{member.loptruong}</p>
+                                                </div>
                                                 <div className="ml-2 flex-shrink-0 flex">
-                                                    <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                        {member.role}
+                                                    <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-700">
+                                                        Học viên
                                                     </p>
                                                 </div>
                                             </div>
@@ -351,7 +379,9 @@ export default function ClassDetails() {
                                     <li key={assignment._id}>
                                         <div className="px-4 py-4 sm:px-6">
                                             <div className="flex items-center justify-between">
-                                                <p className="text-sm font-medium text-green-600 truncate">{assignment.title}</p>
+                                                <div className='flex'>
+                                                    <p className="text-sm font-medium text-green-600 truncate">{assignment.title}</p>
+                                                </div>
                                                 <div className="ml-2 flex-shrink-0 flex">
                                                     <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                         Hạn nộp: {assignment.deadline}
@@ -359,9 +389,10 @@ export default function ClassDetails() {
                                                 </div>
                                             </div>
                                             <div className="mt-2">
-                                                <p className="text-sm text-gray-500">{assignment.description}</p>
+                                                {/* <div className="text-sm text-gray-500" dangerouslySetInnerHTML={assignment.description}></div> */}
+                                                <DisplayContent content={assignment.description} className={'text-sm text-gray-500'} />
                                             </div>
-                                            <div className="mt-2">
+                                            <div className="mt-2 flex items-center gap-3">
                                                 <button
                                                     onClick={() => handleAssignmentToggle(assignment._id)}
                                                     className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -378,6 +409,13 @@ export default function ClassDetails() {
                                                         </>
                                                     )}
                                                 </button>
+                                                {
+                                                    subTaskCode[assignment._id] ? (
+                                                        <p className="text-sm font-medium text-green-900 bg-green-200 px-2 rounded-xl">Đã làm</p>
+                                                    ) : (
+                                                        <p className="text-sm font-medium text-red-900 bg-red-200 px-2 rounded-xl">Chưa làm</p>
+                                                    )
+                                                }
                                             </div>
                                             {expandedAssignment === assignment._id && (
                                                 <div className="mt-4 space-y-4 flex flex-col">
@@ -386,6 +424,9 @@ export default function ClassDetails() {
                                                             {/* <h4 className="text-lg font-medium">{"Bài " + (index + 1)}</h4> */}
                                                             {/* <p className="mt-1 text-sm text-gray-500">{subTask}</p> */}
                                                             <DisplayContent content={subTask} />
+                                                            <div className='h-2'>
+                                                            </div>
+                                                            <p className='text-sm font-medium px-2 py-1 rounded-t-md border border-b-0 w-fit'> bai{index + 1}.c</p>
                                                             {/* <textarea
                                                                 className="mt-2 w-full h-32 p-2 border rounded-md"
                                                                 placeholder="Dán code của bạn ở đây..."
@@ -401,7 +442,7 @@ export default function ClassDetails() {
                                                                     fontFamily: '"Fira code", "Fira Mono", monospace',
                                                                     fontSize: 14,
                                                                 }}
-                                                                className='border rounded-md mt-2 outline-none'
+                                                                className='border rounded-r-md rounded-b-md rounded-se-md outline-none'
                                                             />
                                                         </div>
                                                     ))}

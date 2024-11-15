@@ -5,36 +5,7 @@ import Link from 'next/link'
 import { Book, Clock, Users, CalendarDays, ChevronRight, Plus, X } from 'lucide-react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-
-const initialClasses = [
-    {
-        id: 1,
-        name: 'Tin đại cương K65 (Thứ 2)',
-        description: 'Học về các khái niệm cơ bản ngôn ngữ C',
-        instructor: 'Nguyễn Văn Hoàng, Lù Vũ Thái Sơn',
-        duration: '10 Buổi',
-        students: 33,
-        startDate: '15/01/2024',
-    },
-    {
-        id: 2,
-        name: 'Tin đại cương K65 (Thứ 3)',
-        description: 'Học về các khái niệm cơ bản ngôn ngữ C',
-        instructor: 'Lê Thị Thảo, Nguyễn Việt Hoàng',
-        duration: '10 Buổi',
-        students: 33,
-        startDate: '15/01/2024',
-    },
-    {
-        id: 3,
-        name: 'Tin đại cương K65 (Thứ 4)',
-        description: 'Học về các khái niệm cơ bản ngôn ngữ C',
-        instructor: 'Nguyễn Trọng Hà, Nguyễn Thái Dương',
-        duration: '10 Buổi',
-        students: 20,
-        startDate: '15/01/2024',
-    },
-]
+import DisplayContent from '@/components/DisplayContent'
 
 export default function Home() {
     const [classes, setClasses] = useState<any>([])
@@ -57,6 +28,10 @@ export default function Home() {
         async function callApiClasses() {
             const email: any = localStorage.getItem('email');
             const password: any = localStorage.getItem('password');
+            if (!email || !password) {
+                router.push('/login');
+                return;
+            }
             const response: any = await axios.get('/api/users/classes', {
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,8 +98,12 @@ export default function Home() {
         <main className="flex-grow">
             {
                 loading && (
-                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-75 h-screen">
-                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+                        <div className="text-green-700 fixed font-black animate-pulse">
+                            SFIT
+                        </div>
+                        <div className="animate-spin rounded-full h-20 w-20 border-r-2 fixed border-l-2 border-green-400"></div>
                     </div>
                 )
             }
@@ -152,7 +131,7 @@ export default function Home() {
                             <div key={classItem._id} className="bg-white overflow-hidden shadow rounded-lg">
                                 <div className="px-4 py-5 sm:p-6">
                                     <h3 className="text-lg leading-6 font-medium text-gray-900">{classItem.title}</h3>
-                                    <p className="mt-1 max-w-2xl text-sm text-gray-500">{classItem.description}</p>
+                                    <DisplayContent content={classItem.description} className={'mt-1 max-w-2xl text-sm text-gray-500'} />
                                     <div className="mt-6 grid grid-cols-2 gap-4">
                                         <div className="flex items-center text-sm text-gray-500">
                                             <Users className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
@@ -168,7 +147,7 @@ export default function Home() {
                                         </div>
                                         <div className="flex items-center text-sm text-gray-500">
                                             <CalendarDays className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
-                                            <span>Bắt đầu: **/**/2024</span>
+                                            <span>18:00 - 20:00</span>
                                         </div>
                                     </div>
                                 </div>
@@ -183,6 +162,39 @@ export default function Home() {
                                 </div>
                             </div>
                         ))}
+                        <div className="bg-white overflow-hidden shadow rounded-lg opacity-50 pointer-events-none">
+                            <div className="px-4 py-5 sm:p-6">
+                                <h3 className="text-lg leading-6 font-medium text-gray-900">Tin đại cương 2024</h3>
+                                <p className="mt-1 max-w-2xl text-sm text-gray-500">Lớp học này chỉ là mô phỏng không tồn tại, nếu bạn đang tìm kiếm lớp mình thì chủ động liên hệ người đứng lớp để nhận mã lớp học. Lớp học tồn tại là lớp học có màu đậm hơn</p>
+                                <div className="mt-6 grid grid-cols-2 gap-4">
+                                    <div className="flex items-center text-sm text-gray-500">
+                                        <Users className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                                        <span>0 học viên</span>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-500">
+                                        <Clock className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                                        <span>2 giờ</span>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-500">
+                                        <Book className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                                        <span>zunohoang</span>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-500">
+                                        <CalendarDays className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                                        <span>18:00 - 20:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-4 sm:px-6">
+                                <Link
+                                    href={`/classes/1`}
+                                    className="text-sm font-medium text-green-600 hover:text-green-500 flex items-center"
+                                >
+                                    Vào lớp ngay
+                                    <ChevronRight className="ml-1 h-4 w-4" />
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

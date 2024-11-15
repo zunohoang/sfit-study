@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
             { type: mongoose.Schema.Types.ObjectId, ref: 'Classroom' },
         ], default: []
     },
+    createdAt: { type: Date, default: Date.now },
 })
 
 const User = mongoose.models.User || mongoose.model('User', userSchema)

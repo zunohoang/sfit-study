@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 interface DisplayContentProps {
     content: string;
+    className?: string;
 }
 
-const DisplayContent: React.FC<DisplayContentProps> = ({ content }) => {
+const DisplayContent: React.FC<DisplayContentProps> = ({ content, className }) => {
     return (
         <div
-            className="border border-gray-300 p-4 rounded-lg prose max-w-none"
+            className={className}
             dangerouslySetInnerHTML={{ __html: content }}
         />
     );

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import axios from 'axios'
 
@@ -11,27 +11,50 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
     const router = useRouter();
 
+    useEffect(() => {
+        if (localStorage.getItem('email') && localStorage.getItem('password')) {
+            const check = confirm('Phiên sử dụng của bận chưa hết hạn, bạn có muốn đăng xuất để đăng nhập tài khoản khác không?\nChọn "OK" để đăng xuất rồi đăng nhập lại hoặc "Cancel" để tiếp tục sử dụng tài khoản đã từng đăng nhập');
+            if (check) {
+                localStorage.removeItem('email');
+                localStorage.removeItem('fullName');
+                localStorage.removeItem('team');
+                localStorage.removeItem('msv');
+                localStorage.removeItem('loptruong');
+                localStorage.removeItem('role');
+                localStorage.removeItem('password');
+            } else {
+                router.push('/classes')
+            }
+        }
+    }, [])
+
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
         console.log(email, password);
 
-        const response = await axios.post('/api/login', {
-            email: email,
-            password: password
-        });
+        try {
 
-        if (response.data.code) {
-            setIsLoading(false);
-            localStorage.setItem('email', email);
-            localStorage.setItem('fullName', response.data.user.fullName);
-            localStorage.setItem('team', response.data.user.team);
-            localStorage.setItem('msv', response.data.user.msv);
-            localStorage.setItem('loptruong', response.data.user.loptruong);
-            localStorage.setItem('role', response.data.user.role);
-            localStorage.setItem('password', password);
-            router.push('/classes')
-        } else {
+            const response = await axios.post('/api/login', {
+                email: email,
+                password: password
+            });
+
+            if (response.data.code) {
+                setIsLoading(false);
+                localStorage.setItem('email', email);
+                localStorage.setItem('fullName', response.data.user.fullName);
+                localStorage.setItem('team', response.data.user.team);
+                localStorage.setItem('msv', response.data.user.msv);
+                localStorage.setItem('loptruong', response.data.user.loptruong);
+                localStorage.setItem('role', response.data.user.role);
+                localStorage.setItem('password', password);
+                router.push('/classes')
+            } else {
+                setIsLoading(false)
+                alert('Sai tên người dùng hoặc mật khẩu')
+            }
+        } catch (error) {
             setIsLoading(false)
             alert('Sai tên người dùng hoặc mật khẩu')
         }
@@ -58,6 +81,17 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-b from-green-50 to-white lg:grid lg:grid-cols-2">
+            {
+                isLoading && (
+                    <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+                        <div className="text-green-700 fixed font-black animate-pulse">
+                            SFIT
+                        </div>
+                        <div className="animate-spin rounded-full h-20 w-20 border-r-2 fixed border-l-2 border-green-400"></div>
+                    </div>
+                )
+            }
             <div className="flex items-center justify-center px-8 py-12 md:px-12 order-2">
                 <div className="mx-auto w-full max-w-sm space-y-6">
                     <div className="space-y-2 text-center">

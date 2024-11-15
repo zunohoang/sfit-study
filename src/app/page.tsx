@@ -6,10 +6,29 @@ import { useState, useEffect } from "react"
 import ModelStart from "@/components/ModelStart"
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+      setIsModalOpen(true)
+    }, 1000)
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
+      {
+        loading && (
+          <div className="fixed z-50 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+            <div className="text-green-700 fixed font-black animate-pulse">
+              SFIT
+            </div>
+            <div className="animate-spin rounded-full h-20 w-20 border-r-2 fixed border-l-2 border-green-400"></div>
+          </div>
+        )
+      }
       <ModelStart isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       {/* Hero Section */}
       <header className="relative bg-white">

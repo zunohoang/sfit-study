@@ -12,6 +12,8 @@ import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
 import 'prismjs/themes/prism.css'
+import AlertModel from '@/components/AlertModel'
+import { set } from 'mongoose'
 
 // Mock data for the class details
 const classDetailsV1 = {
@@ -74,13 +76,21 @@ interface SubTaskCode {
 }
 
 export default function ClassDetails() {
-    const [activeTab, setActiveTab] = useState<string>('sessions')
+    const [activeTab, setActiveTab] = useState<string>('assignments')
     const [expandedAssignment, setExpandedAssignment] = useState<number | null>(null)
     const [subTaskCode, setSubTaskCode] = useState<SubTaskCode>({})
     const [classDetails, setClassDetails] = useState<any>(classDetailsV1)
     const pathName = usePathname();
     const classroomId = pathName.split('/')[2];
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [titleModel, setTitleModel] = useState('')
+    const [messageModel, setMessageModel] = useState('')
+    const [typeModel, setTypeModel] = useState<'success' | 'warning' | 'confirmation'>('confirmation')
+    const [urlModel, setUrlModel] = useState('')
+
 
     useEffect(() => {
         async function callApiClasses() {
@@ -179,19 +189,44 @@ export default function ClassDetails() {
             console.log(response);
 
             if (data.success) {
-                alert('Nộp bài thành công');
+                setLoading(false);
+                setTitleModel('Thành công');
+                setMessageModel('Nộp bài thành công ấn tiếp tục để tiếp tục');
+                setTypeModel('success');
+                setUrlModel('/classes/' + classroomId);
+                setIsModalOpen(true);
             } else {
-                alert('Nộp bài thất bại');
+                setLoading(false);
+                setTitleModel('Thất bại');
+                setMessageModel('Nộp bài thất bại hãy thử lại sau ít phút');
+                setTypeModel('warning');
+                setUrlModel('');
+                setIsModalOpen(true);
             }
-            setLoading(false);
         } catch (error) {
-            alert('Nộp bài thât bại')
             setLoading(false);
+            setTitleModel('Thất bại');
+            setMessageModel('Nộp bài thất bại hãy thử lại sau ít phút');
+            setTypeModel('warning');
+            setUrlModel('');
+            setIsModalOpen(true);
         }
     }
 
     return (
         <main className="flex-grow bg-gray-100">
+            {
+                isModalOpen && (
+                    <AlertModel
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        type={typeModel}
+                        title={titleModel}
+                        message={messageModel}
+                        goto={urlModel}
+                    />
+                )
+            }
             {
                 loading && (
                     <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">
@@ -375,8 +410,8 @@ export default function ClassDetails() {
 
                         {activeTab === 'assignments' && (
                             <ul className="divide-y divide-gray-200">
-                                {classDetails.assignments.map((assignment: any) => (
-                                    <li key={assignment._id}>
+                                {classDetails.assignments && classDetails.assignments.map((assignment: any, index: number) => (
+                                    <li key={index}>
                                         <div className="px-4 py-4 sm:px-6">
                                             <div className="flex items-center justify-between">
                                                 <div className='flex'>
@@ -446,7 +481,11 @@ export default function ClassDetails() {
                                                             />
                                                         </div>
                                                     ))}
-                                                    <button onClick={() => submitCode(assignment._id)} className='bg-green-500 ml-auto hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center'>
+                                                    <button
+                                                        onClick={() => submitCode(assignment._id)}
+                                                        className='bg-green-500 ml-auto hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center'
+                                                        onMouseDown={(e) => e.preventDefault()}
+                                                    >
                                                         Nộp bài
                                                     </button>
                                                     <p className="text-sm text-gray-400">* Cẩn thận code lỏ</p>

@@ -6,6 +6,8 @@ import { Book, Clock, Users, CalendarDays, ChevronRight, Plus, X } from 'lucide-
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import DisplayContent from '@/components/DisplayContent'
+import AlertModel from '@/components/AlertModel'
+import { set } from 'mongoose'
 
 export default function Home() {
     const [classes, setClasses] = useState<any>([])
@@ -23,6 +25,11 @@ export default function Home() {
     const router = useRouter();
 
     const [classCode, setClassCode] = useState('')
+
+    const [titleModel, setTitleModel] = useState('')
+    const [messageModel, setMessageModel] = useState('')
+    const [typeModel, setTypeModel] = useState<'success' | 'warning' | 'confirmation'>('confirmation')
+    const [urlModel, setUrlModel] = useState('')
 
     useEffect(() => {
         async function callApiClasses() {
@@ -70,9 +77,12 @@ export default function Home() {
         setShowForm(false)
     }
 
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
     const joinClassByCode = async () => {
         const email: any = localStorage.getItem('email');
         const password: any = localStorage.getItem('password');
+
         try {
             const response: any = await axios.post('/api/users/classes', {
                 classroomCode: classCode
@@ -85,17 +95,40 @@ export default function Home() {
             const data = response.data;
             if (data.success) {
                 console.log(data);
-                alert('Tham gia lớp học thành công');
-                router.push('/classes/' + classCode);
+                setTitleModel('Thành công');
+                setMessageModel('Tham gia lớp học thành công');
+                setTypeModel('success');
+                setUrlModel('/classes/' + data.data.classroom._id);
+                setIsModalOpen(true);
             } else {
-                alert('Mã lớp học không tồn tại');
+                setTitleModel('Thất bại');
+                setMessageModel('Mã lớp học không tồn tại');
+                setTypeModel('warning');
+                setUrlModel('');
+                setIsModalOpen(true);
             }
         } catch (error) {
-            alert('Mã lớp học không tồn tại');
+            setTitleModel('Thất bại');
+            setMessageModel('Mã lớp học không tồn tại');
+            setTypeModel('warning');
+            setUrlModel('');
+            setIsModalOpen(true);
         }
     }
     return (
         <main className="flex-grow">
+            {
+                isModalOpen && (
+                    <AlertModel
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        type={typeModel}
+                        title={titleModel}
+                        message={messageModel}
+                        goto={urlModel}
+                    />
+                )
+            }
             {
                 loading && (
                     <div className="fixed z-10 top-0 flex justify-center items-center w-full bg-black bg-opacity-80 h-screen">

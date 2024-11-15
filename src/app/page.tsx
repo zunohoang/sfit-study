@@ -4,10 +4,12 @@ import Link from "next/link"
 import { Book, GraduationCap, Users, Code, ArrowRight, Calendar, Trophy } from 'lucide-react'
 import { useState, useEffect } from "react"
 import ModelStart from "@/components/ModelStart"
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
+  const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => {
@@ -44,10 +46,20 @@ export default function Home() {
                 Đây là trang web hỗ trợ các lớp học SFIT hoạt động một cách hiệu quả.
               </p>
               <div className="mt-8 space-x-4">
-                <Link href={'/login'} className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700 inline-flex items-center">
+                <div onClick={() => {
+                  if (localStorage.getItem('email')) {
+                    if (localStorage.getItem('role') == 'ADMIN') {
+                      router.push('/admins/classes')
+                    } else {
+                      router.push('/classes')
+                    }
+                  } else {
+                    router.push('/login')
+                  }
+                }} className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700 inline-flex items-center">
                   Tham gia ngay
                   <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
+                </div>
                 <Link href={'https://sfit.com.vn'} className="px-4 py-2 text-green-600 bg-white border border-green-600 rounded hover:bg-green-50">
                   Tìm hiểu thêm
                 </Link>

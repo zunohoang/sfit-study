@@ -165,7 +165,7 @@ export default function Home() {
                         <div className="bg-white overflow-hidden shadow rounded-lg opacity-50 pointer-events-none">
                             <div className="px-4 py-5 sm:p-6">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">Tin đại cương 2024</h3>
-                                <p className="mt-1 max-w-2xl text-sm text-gray-500">Lớp học này chỉ là mô phỏng không tồn tại, nếu bạn đang tìm kiếm lớp mình thì chủ động liên hệ người đứng lớp để nhận mã lớp học. Lớp học tồn tại là lớp học có màu đậm hơn</p>
+                                <p className="mt-1 max-w-2xl text-sm text-gray-500">Lớp học này chỉ là mô phỏng không tồn tại, nếu đang tìm kiếm lớp thì ib người đứng lớp để nhận mã lớp.</p>
                                 <div className="mt-6 grid grid-cols-2 gap-4">
                                     <div className="flex items-center text-sm text-gray-500">
                                         <Users className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />

@@ -15,7 +15,7 @@ export async function GET(request: Request) {
         const credentials: any = Buffer.from(base64Credentials, 'base64').toString('ascii');
         const [email, password]: any = credentials.split(':');
 
-        const user = await User.findOne({ email, password }).populate('classroom');
+        const user = await User.findOne({ email, password }).populate({ path: 'classroom', model: Classroom });
         console.log(user.classroom);
         if (!user) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });

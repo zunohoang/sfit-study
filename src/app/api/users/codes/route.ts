@@ -14,7 +14,7 @@ export async function POST(request: Request) {
         const credentials: any = Buffer.from(base64Credentials, 'base64').toString('ascii');
         const [email, password]: any = credentials.split(':');
 
-        const user = await User.findOne({ email: email, password: password }).populate('classroom');
+        const user = await User.findOne({ email: email, password: password }).populate({ path: 'classroom', model: Classroom });
         if (!user) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }

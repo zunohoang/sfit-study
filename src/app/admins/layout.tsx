@@ -1,3 +1,10 @@
+
+/**
+ * Project: study.sfit.com.vn
+ * Author: zunohoang (https://github.com/zunohoang)
+ * Email: nguyenvanhoang2005nt@gmail.com
+ */
+
 'use client'
 
 import { Menu, Plus, Settings, Home, Calendar, GraduationCap, HelpCircle, Baby, UserCheck } from 'lucide-react'

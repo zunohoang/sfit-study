@@ -1,3 +1,10 @@
+
+/**
+ * Project: study.sfit.com.vn
+ * Author: zunohoang (https://github.com/zunohoang)
+ * Email: nguyenvanhoang2005nt@gmail.com
+ */
+
 import { NextResponse } from 'next/server'
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';

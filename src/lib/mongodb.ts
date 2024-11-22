@@ -1,4 +1,10 @@
-// lib/mongodb.ts
+
+/**
+ * Project: study.sfit.com.vn
+ * Author: zunohoang (https://github.com/zunohoang)
+ * Email: nguyenvanhoang2005nt@gmail.com
+ */
+
 import mongoose from 'mongoose';
 
 const connectToDatabase = async (): Promise<void> => {

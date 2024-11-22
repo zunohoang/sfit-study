@@ -1,3 +1,10 @@
+
+/**
+ * Project: study.sfit.com.vn
+ * Author: zunohoang (https://github.com/zunohoang)
+ * Email: nguyenvanhoang2005nt@gmail.com
+ */
+
 import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/next';
 import localFont from "next/font/local";

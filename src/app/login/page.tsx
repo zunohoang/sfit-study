@@ -35,7 +35,6 @@ export default function LoginPage() {
                 localStorage.setItem('email', email);
                 localStorage.setItem('fullName', response.data.user.fullName);
                 localStorage.setItem('id', response.data.user._id);
-                localStorage.setItem('team', response.data.user.team);
                 localStorage.setItem('msv', response.data.user.msv);
                 localStorage.setItem('loptruong', response.data.user.loptruong);
                 localStorage.setItem('role', response.data.user.role);

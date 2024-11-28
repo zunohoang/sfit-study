@@ -129,7 +129,13 @@ export default function ClassDetails() {
                     classroom.announcements = [
                         { id: 1, title: 'Chào mừng đến với lớp học!', content: classroom.news, date: '**/**/2024' },
                     ]
-
+                    if (classroom.teachers) {
+                        const teachers = classroom.teachers;
+                        const userId1 = localStorage.getItem('id');
+                        if (teachers.includes(userId1)) {
+                            setHasRolEdit(true);
+                        }
+                    }
                     setSubTaskCode((subTaskCode: any) => {
                         const newSubTaskCode: SubTaskCode = {}
                         // lay du lieu trong classroom.codes
@@ -149,6 +155,8 @@ export default function ClassDetails() {
         setRole(localStorage.getItem('role') || '');
         setUserId(localStorage.getItem('id') || '');
     }, []);
+
+    const [hasRolEdit, setHasRolEdit] = useState(false);
 
     const TabButton = ({ id, label }: TabButtonProps) => (
         <button
@@ -566,7 +574,7 @@ export default function ClassDetails() {
                                         </li>
                                     ))}
                                 </ul>
-                                {(userId.includes(classDetails.teachers)) && (<div>
+                                {(hasRolEdit) ? (<div>
                                     <div className='h-[1px] bg-slate-300 mx-6 mt-6' ></div>
                                     <div className="px-4 py-5 sm:p-6">
                                         <h3 className="text-lg leading-6 font-medium text-green-500 mb-4">Tạo bài tập mới</h3>
@@ -661,7 +669,7 @@ export default function ClassDetails() {
                                     </div>
                                     <div className='h-[1px] bg-slate-300 mx-6' ></div>
                                     <Problems assignments={classDetails.assignments} classrooms={classDetails} />
-                                </div>)}
+                                </div>) : ""}
                             </div>
                         )}
                     </div>

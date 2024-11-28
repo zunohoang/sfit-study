@@ -143,12 +143,15 @@ export async function PUT(request: Request) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
+
         if (user.role != 'ADMIN') {
-            return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+            if (user.role != 'TEACHER') {
+                return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+            }
         }
 
-        const { assignmentId, title, description, deadline, problems } = await request.json();
-        const result = await Assignment.findByIdAndUpdate(assignmentId, { title, description, deadline, problems });
+        const { _id, title, description, deadline, problems } = await request.json();
+        const result = await Assignment.findByIdAndUpdate(_id, { title, description, deadline, problems });
 
         if (result) {
             return NextResponse.json({

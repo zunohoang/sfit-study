@@ -5,11 +5,10 @@
  * Email: nguyenvanhoang2005nt@gmail.com
  */
 
-
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChevronDown, ChevronUp, User, Calendar, FileText, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, User, Calendar, FileText, X, Edit } from 'lucide-react'
 import axios from 'axios'
 import { set } from 'mongoose'
 import DisplayContent from './DisplayContent'
@@ -19,6 +18,7 @@ import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
 import 'prismjs/themes/prism.css'
+import EditProblemModal from './EditProblemModal'
 
 
 
@@ -47,6 +47,10 @@ export default function Problems({ assignments, classrooms }: any) {
                 console.log(data.data.assignment)
                 const temp = data.data.assignment
                 temp.student = classrooms.students
+                console.log("SUB: ", temp);
+                console.log("Tổng số bài nộp: ", temp.codes.length);
+                console.log("Tổng số học viên: ", temp.classroom.studentNum);
+                console.log("Tổng số học viên đã tham gia lớp", temp.student.length);
                 setProblem(temp)
             }
 
@@ -75,8 +79,19 @@ export default function Problems({ assignments, classrooms }: any) {
         return false
     }
 
+    const handleEditProblem = (id: string) => {
+        console.log(id);
+        setEditProblem(assignments.find((assignment: any) => assignment._id == id));
+        setEditOpen(true);
+    }
+
+    const [editProblem, setEditProblem] = useState<any>({});
+
+    const [editOpen, setEditOpen] = useState(false);
+
     return (
         <div className="px-4 py-5 sm:p-6">
+            <EditProblemModal isOpen={editOpen} setIsOpen={setEditOpen} problem={editProblem} />
             <h2 className='text-lg font-semibold text-green-500 mb-4'>Danh sách bài tập</h2>
             <ul className="flex flex-col gap-4">
                 {assignments && assignments.map((assignment: any, index: number) => (
@@ -87,19 +102,24 @@ export default function Problems({ assignments, classrooms }: any) {
                                     <h3 className="text-lg leading-6 font-medium text-gray-900">{assignment.title}</h3>
                                     <p className="mt-1 max-w-2xl text-sm text-gray-500">Hạn nộp: {assignment.deadline}</p>
                                 </div>
-                                <button
-                                    onClick={() => toggleAssignment(assignment._id)}
-                                    className="flex items-center gap-2 text-sm font-medium text-green-600 hover:text-green-700"
-                                    aria-expanded={expandedAssignment == assignment._id}
-                                    aria-controls={`assignment-${assignment._id}-content`}
-                                >
-                                    {expandedAssignment == assignment._id ? 'Ẩn chi tiết' : 'Xem chi tiết'}
-                                    {expandedAssignment == assignment._id ? (
-                                        <ChevronUp className="h-5 w-5" />
-                                    ) : (
-                                        <ChevronDown className="h-5 w-5" />
-                                    )}
-                                </button>
+                                <div className='flex gap-8'>
+                                    <button className="text-green-700 hover:text-green-500" onClick={() => handleEditProblem(assignment._id)}>
+                                        <Edit className="h-6 w-6" />
+                                    </button>
+                                    <button
+                                        onClick={() => toggleAssignment(assignment._id)}
+                                        className="flex items-center gap-2 text-sm font-medium text-green-600 hover:text-green-700"
+                                        aria-expanded={expandedAssignment == assignment._id}
+                                        aria-controls={`assignment-${assignment._id}-content`}
+                                    >
+                                        {expandedAssignment == assignment._id ? 'Ẩn chi tiết' : 'Xem chi tiết'}
+                                        {expandedAssignment == assignment._id ? (
+                                            <ChevronUp className="h-5 w-5" />
+                                        ) : (
+                                            <ChevronDown className="h-5 w-5" />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         {expandedAssignment == assignment._id && (
@@ -107,7 +127,19 @@ export default function Problems({ assignments, classrooms }: any) {
                                 <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                                     <div className="sm:col-span-2">
                                         <dt className="text-sm font-medium text-gray-500">Mô tả</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{problem.description}</dd>
+                                        <dd className="mt-1 text-sm text-gray-900 flex justify-between">
+                                            <DisplayContent content={assignment.description} />
+                                        </dd>
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <dt className="text-sm font-medium text-gray-500">Dữ liệu thống kê</dt>
+                                        <dd className="mt-1 text-sm text-gray-900">
+                                            <ul className="list-disc pl-5 space-y-1 text-blue-600">
+                                                <li>Tổng số học viên: <span className="font-semibold">{problem.classroom ? problem.classroom.studentNum : ""}</span></li>
+                                                <li>Tổng số bài nộp: <span className="font-semibold">{problem.codes ? problem.codes.length : ""}</span></li>
+                                                <li>Tổng số học viên đã tham gia lớp: <span className="font-semibold">{problem.student ? problem.student.length : ""}</span></li>
+                                            </ul>
+                                        </dd>
                                     </div>
                                     <div className="sm:col-span-2">
                                         <dt className="text-sm font-medium text-gray-500">Người chưa nộp</dt>
@@ -137,6 +169,7 @@ export default function Problems({ assignments, classrooms }: any) {
                                                             <User className="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />
                                                             <span className="ml-2 flex-1 w-0 truncate">{submission.user.fullName}</span>
                                                         </div>
+                                                        <p className='text-gray-400'>{new Date(submission.createdAt).toLocaleString()}</p>
                                                         <button
                                                             onClick={() => openSubmissionModal(submission)}
                                                             className="ml-4 font-medium text-green-600 hover:text-green-500"
@@ -178,7 +211,7 @@ export default function Problems({ assignments, classrooms }: any) {
                                     </h3>
                                     <div className="mt-2 w-full">
                                         <p className="text-sm text-gray-500">
-                                            <strong>Học viên:</strong> {selectedSubmission.user.fullName}
+                                            <p><strong>Học viên:</strong> {selectedSubmission.user.fullName} - {new Date(selectedSubmission.createdAt).toLocaleString()}</p>
                                         </p>
                                         {
                                             selectedSubmission.codes && selectedSubmission.codes.map((code: any, index: any) => (
@@ -222,3 +255,79 @@ export default function Problems({ assignments, classrooms }: any) {
         </div>
     )
 }
+
+/*
+
+0
+67361ddebd590241faa0b7f9
+1
+67362a4e61e9745b71cc40ee
+2
+67362d0461e9745b71cc4110
+3
+67362f7561e9745b71cc412b
+4
+67363e910ed9c01470a71971
+5
+67364dda9d773c32bb1468e5
+6
+6736974ca8f2d8119fed433e
+7
+6736a301dcaf30181a886bc7
+8
+6736a63342ba3b48034565eb
+9
+6736b8c3c65398b5e9e26a30
+10
+6737075d45423ab6a23aa19c
+11
+67370d3c6e1116eed477f949
+12
+673761bd0a745af51ecac531
+13
+673761cb7a1c067a204df397
+14
+673777c78ba5db2e9c2354ef
+15
+67362d8d61e9745b71cc4116
+16
+673781bb57f5ab4fb4aab4f1
+17
+6737838257f5ab4fb4aab519
+18
+6738526a2a06ab1400a2c522
+19
+6736a33242ba3b48034565d9
+20
+6739a0c70c3ccc9f17e4fd9c
+21
+673b22eb4fbeda9fc0ac7b80
+22
+673675e050f81707f2d6f28b
+23
+673b2434104ecfe28c8dffe4
+24
+673b24b4af9af25f7a9ed5e9
+25
+673b2486af9af25f7a9ed5dd
+26
+673b22e14fbeda9fc0ac7b7c
+27
+673b2cdef14a8849c5cf1d4a
+28
+673b25e7104ecfe28c8e0044
+29
+673c395b3c9736594f7a75e3
+30
+673c38f6d24e089cbf309984
+31
+673d816894456c39b901ef10
+32
+673de5ac39898b2461b4b4aa
+33
+673b2e2e5ab40d73f848a030
+34
+67405efe0750e9d5906199bb
+35
+6741735d4127cbcb832231c0
+*/

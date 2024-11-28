@@ -17,6 +17,7 @@ const classroomSchema = new mongoose.Schema({
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     teachers: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], default: [] },
     time: { type: String },
+    news: [{ type: String }],
     studentNum: { type: Number },
     assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }],
     createdAt: { type: Date, default: Date.now },

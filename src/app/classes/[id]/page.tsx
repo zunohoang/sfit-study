@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { Book, Clock, Users, CalendarDays, MessageSquare, Code, ChevronLeft, ChevronDown, ChevronUp, Bell, User, Facebook, Youtube, Github, Plus } from 'lucide-react'
 import DisplayContent from '@/components/DisplayContent'
@@ -22,8 +22,10 @@ import 'prismjs/themes/prism.css'
 import AlertModel from '@/components/AlertModel'
 import TextEditor from '@/components/EditerContent'
 import Problems from '@/components/Problems'
-import { set } from 'mongoose'
-
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import DisplayMarkDown from '@/components/DisplayMarkdown'
+import DocumentCBasic from './DocumentCBasic.mdx'
 
 // Mock data for the class details
 const classDetailsV1 = {
@@ -101,6 +103,7 @@ export default function ClassDetails() {
     const [typeModel, setTypeModel] = useState<'success' | 'warning' | 'confirmation'>('confirmation')
     const [urlModel, setUrlModel] = useState('')
     const [role, setRole] = useState('')
+    const [userId, setUserId] = useState('')
 
     useEffect(() => {
         async function callApiClasses() {
@@ -124,8 +127,7 @@ export default function ClassDetails() {
                         { id: 1, title: 'Buổi 1. Mẫu', date: '**/**/2024', time: '18:00 - 20:00' },
                     ]
                     classroom.announcements = [
-                        { id: 1, title: 'Chào mừng đến với lớp học!', content: 'Chúng ta sẽ bắt đầu vào tuần tới. Hãy chuẩn bị sẵn sàng!', date: '**/**/2024' },
-                        { id: 2, title: 'Test', content: 'Phiên bản beta', date: '**/**/2024' },
+                        { id: 1, title: 'Chào mừng đến với lớp học!', content: classroom.news, date: '**/**/2024' },
                     ]
 
                     setSubTaskCode((subTaskCode: any) => {
@@ -145,6 +147,7 @@ export default function ClassDetails() {
 
         callApiClasses();
         setRole(localStorage.getItem('role') || '');
+        setUserId(localStorage.getItem('id') || '');
     }, []);
 
     const TabButton = ({ id, label }: TabButtonProps) => (
@@ -278,6 +281,7 @@ export default function ClassDetails() {
             setIsModalOpen(true);
         }
     }
+
 
     return (
         <main className="flex-grow bg-gray-100">
@@ -423,7 +427,7 @@ export default function ClassDetails() {
                                                 </div>
                                             </div>
                                             <div className="mt-2">
-                                                <p className="text-sm text-gray-500">{announcement.content}</p>
+                                                <Link href={'/docs'}>Ấn vào đây để xem tài liệu</Link>
                                             </div>
                                         </div>
                                     </li>
@@ -562,10 +566,8 @@ export default function ClassDetails() {
                                         </li>
                                     ))}
                                 </ul>
-
-                                {(role == 'TEACHER' || role == 'ADMIN') && (<div>
+                                {(userId.includes(classDetails.teachers)) && (<div>
                                     <div className='h-[1px] bg-slate-300 mx-6 mt-6' ></div>
-
                                     <div className="px-4 py-5 sm:p-6">
                                         <h3 className="text-lg leading-6 font-medium text-green-500 mb-4">Tạo bài tập mới</h3>
                                         <form onSubmit={addAssignment} className="mt-6">

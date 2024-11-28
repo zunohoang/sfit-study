@@ -38,7 +38,6 @@ export async function POST(request: Request) {
             const teacher: any = await User.findOne({
                 email: teachers[i]
             });
-            console.log(teacher);
             if (!teacher) {
                 return NextResponse.json({ success: false, message: 'Teacher not found' }, { status: 400 });
             }

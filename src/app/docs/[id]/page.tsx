@@ -17,9 +17,10 @@ interface AnsProps {
     author: string
 }
 
-export default async function MarkdownPage({ params }: { params: { id: string } }) {
+export default async function MarkdownPage({ params }: { params: any }) {
 
-    const docId = (params).id;
+    const resolvedParams = await params; // Chờ giải quyết Promise của params
+    const docId = resolvedParams.id;
 
     let ans: AnsProps = {
         title: "Không xác định",

@@ -22,10 +22,6 @@ import 'prismjs/themes/prism.css'
 import AlertModel from '@/components/AlertModel'
 import TextEditor from '@/components/EditerContent'
 import Problems from '@/components/Problems'
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import DisplayMarkDown from '@/components/DisplayMarkdown'
-import DocumentCBasic from './DocumentCBasic.mdx'
 
 // Mock data for the class details
 const classDetailsV1 = {
@@ -525,9 +521,16 @@ export default function ClassDetails() {
                                                     </button>
                                                     {
                                                         subTaskCode[assignment._id] ? (
-                                                            <p className="text-sm font-medium text-green-900 bg-green-200 px-2 rounded-xl">Đã làm</p>
+                                                            <>
+                                                                <p className="text-sm font-medium text-green-900 bg-green-200 px-2 rounded-xl">Đã làm</p>
+                                                                {assignment.ans != null ? (<Link href={`/docs/${assignment.ans}`} className='text-sky-500 text-sm hover:bg-sky-100 hover:text-sky-900 px-1 rounded-md' target="_blank">Đáp án</Link>) : ""}
+                                                            </>
                                                         ) : (
-                                                            <p className="text-sm font-medium text-red-900 bg-red-200 px-2 rounded-xl">Chưa làm</p>
+                                                            <>
+                                                                <p className="text-sm font-medium text-red-900 bg-red-200 px-2 rounded-xl">Chưa làm</p>
+                                                                {assignment.ans != null ? (<Link href={`/docs/${assignment.ans}`} className='text-sky-500 text-sm hover:bg-sky-100 hover:text-sky-900 px-1 rounded-md' target="_blank">Đáp án</Link>) : ""}
+
+                                                            </>
                                                         )
                                                     }
                                                 </div>

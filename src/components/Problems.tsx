@@ -19,6 +19,7 @@ import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
 import 'prismjs/themes/prism.css'
 import EditProblemModal from './EditProblemModal'
+import Link from 'next/link'
 
 
 
@@ -85,6 +86,8 @@ export default function Problems({ assignments, classrooms }: any) {
         setEditOpen(true);
     }
 
+    const [ansOpen, setAnsOpen] = useState(false);
+
     const [editProblem, setEditProblem] = useState<any>({});
 
     const [editOpen, setEditOpen] = useState(false);
@@ -106,6 +109,9 @@ export default function Problems({ assignments, classrooms }: any) {
                                     <button className="text-green-700 hover:text-green-500" onClick={() => handleEditProblem(assignment._id)}>
                                         <Edit className="h-6 w-6" />
                                     </button>
+                                    <Link className="text-green-700 hover:text-green-500" href={'/admins/docs?assignmentId=' + assignment._id + "&title=" + assignment.title} target='_blank'>
+                                        Thêm đáp án
+                                    </Link>
                                     <button
                                         onClick={() => toggleAssignment(assignment._id)}
                                         className="flex items-center gap-2 text-sm font-medium text-green-600 hover:text-green-700"

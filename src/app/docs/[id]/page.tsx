@@ -41,7 +41,7 @@ export async function generateMetadata(
 
 export default async function MarkdownPage({ params }: { params: any }) {
 
-    const resolvedParams = await params; // Chờ giải quyết Promise của params
+    const resolvedParams = await params; // Chờ giải Promise của params
     const docId = resolvedParams.id;
 
     let ans: AnsProps = {

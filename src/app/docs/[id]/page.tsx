@@ -13,10 +13,12 @@ interface AnsProps {
 }
 
 export async function generateMetadata(
-    { params }: { params: { id: string } },
+    { params }: { params: any },
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const docId = params.id;
+
+    const resolvedParams = await params; // Chờ giải Promise của params
+    const docId = resolvedParams.id;
 
     await connectToDatabase();
     const doc = await Doc.findOne({ _id: docId });

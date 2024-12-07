@@ -529,7 +529,6 @@ export default function ClassDetails() {
                                                             <>
                                                                 <p className="text-sm font-medium text-red-900 bg-red-200 px-2 rounded-xl">Chưa làm</p>
                                                                 {assignment.ans != null ? (<Link href={`/docs/${assignment.ans}`} className='text-sky-500 text-sm hover:bg-sky-100 hover:text-sky-900 px-1 rounded-md' target="_blank">Đáp án</Link>) : ""}
-
                                                             </>
                                                         )
                                                     }

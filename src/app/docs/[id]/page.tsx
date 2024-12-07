@@ -1,13 +1,8 @@
 import Link from 'next/link';
-import MarkdownDisplay from '../../../components/markdown-display'
-import axios from 'axios';
+import { Metadata, ResolvingMetadata } from 'next'
+import MarkdownDisplay from '@/components/markdown-display'
 import connectToDatabase from '@/lib/mongodb';
-import User from '@/models/User';
-import Classroom from '@/models/Classroom';
-import Assignment from '@/models/Assignment';
-import Code from '@/models/Code';
 import Doc from '@/models/Doc';
-import { randomInt } from 'crypto';
 
 interface AnsProps {
     title: string,
@@ -17,10 +12,35 @@ interface AnsProps {
     author: string
 }
 
-export default async function MarkdownPage({ params }: { params: any }) {
+export async function generateMetadata(
+    { params }: { params: { id: string } },
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const docId = params.id;
 
-    const resolvedParams = await params; // Chờ giải quyết Promise của params
-    const docId = resolvedParams.id;
+    await connectToDatabase();
+    const doc = await Doc.findOne({ _id: docId });
+
+    return {
+        title: doc.title,
+        description: `${doc.content.substring(0, 160)}...`,
+        openGraph: {
+            title: doc.title,
+            description: `${doc.content.substring(0, 160)}...`,
+            type: 'article',
+            authors: [doc.author],
+            publishedTime: doc.createdAt.toISOString(),
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: doc.title,
+            description: `${doc.content.substring(0, 160)}...`,
+        },
+    }
+}
+
+export default async function MarkdownPage({ params }: { params: { id: string } }) {
+    const docId = params.id;
 
     let ans: AnsProps = {
         title: "Không xác định",
@@ -31,8 +51,7 @@ export default async function MarkdownPage({ params }: { params: any }) {
     };
 
     try {
-        connectToDatabase();
-
+        await connectToDatabase();
         const doc = await Doc.findOne({ _id: docId });
 
         ans = {
@@ -46,7 +65,7 @@ export default async function MarkdownPage({ params }: { params: any }) {
         console.log(ans);
 
     } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
     }
 
     return (
@@ -54,13 +73,15 @@ export default async function MarkdownPage({ params }: { params: any }) {
             <header className="mb-3 border-b-[1px] py-5 border-gray-300 flex justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">{ans.title}</h1>
-                    <p className="text-gray-600">Đăng bởi <i>{ans.author}</i> vào {ans.createdAt.toLocaleDateString()}</p>
+                    <p className="text-gray-600">Đăng bởi <i>{ans.author}</i> vào <time dateTime={ans.createdAt.toISOString()}>{ans.createdAt.toLocaleDateString()}</time></p>
                 </div>
                 <p>👁️ {ans.views} lượt xem</p>
             </header>
-            <MarkdownDisplay content={ans.content} />
+            <article>
+                <MarkdownDisplay content={ans.content} />
+            </article>
             <footer className="mt-8 border-t pt-4">
-                <p className="text-center text-gray-500">© 2024 SFIT | <Link href={'https://github.com/zunohoang'} target='_blank' >zunohoang</Link>. All rights reserved.</p>
+                <p className="text-center text-gray-500">© 2024 SFIT | <Link href={'https://github.com/zunohoang'} target='_blank' rel="noopener noreferrer">zunohoang</Link>. All rights reserved.</p>
             </footer>
         </main>
     )

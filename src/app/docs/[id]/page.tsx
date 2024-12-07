@@ -32,6 +32,12 @@ export async function generateMetadata(
             type: 'article',
             authors: [doc.author],
             publishedTime: doc.createdAt.toISOString(),
+            images: [
+                {
+                    url: '/bgclb.jpg',
+                    alt: doc.title,
+                },
+            ],
         },
         twitter: {
             card: 'summary_large_image',

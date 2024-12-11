@@ -10,6 +10,7 @@ import { Analytics } from '@vercel/analytics/next';
 import localFont from "next/font/local";
 import "./globals.css";
 import Head from "next/head";
+import FeedbackModal from "@/components/FeedbackModal";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -63,6 +64,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <div className="fixed z-50 right-5 bottom-5">
+          <FeedbackModal />
+        </div>
         <Analytics />
       </body>
     </html>

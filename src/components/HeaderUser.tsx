@@ -89,9 +89,11 @@ export default function Header() {
                                             <p className="text-gray-500">{localStorage.getItem('loptruong')}</p>
                                         </div>
                                         <div>
+                                            { role == "TEACHER" &&
                                             <Link href="/admins/docs">
                                                 <a className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Tạo tài liệu</a>
                                             </Link>
+                                            }
                                         </div>
                                         <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => {
                                             localStorage.clear();

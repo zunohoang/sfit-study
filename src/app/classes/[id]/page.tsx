@@ -324,17 +324,19 @@ export default function ClassDetails() {
                     <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
                         <div className="px-4 py-5 sm:px-6 flex justify-between">
                             <h3 className="text-lg leading-6 font-medium text-green-600">Thông tin lớp học</h3>
-                            <b 
-                                hidden={role == 'STUDENT'}
-                                onClick={() => {
-                                    // Copy vao clipboard
-                                    navigator.clipboard.writeText("https://study.sfit.com.vn/classes/" + classroomId);
-                                    alert('Đã copy link tham gia lớp học vào clipboard: ' + "https://study.sfit.com.vn/classes/" + classroomId);
-                                }}
-                                className="text-md leading-6 font-medium text-gray-600 flex justify-center items-center gap-2 hover:text-gray-900 hover:cursor-pointer">
-                                <Copy className="h-5 w-5 text-gray-600 hover:text-gray-900" />
-                                Tạo link tham gia lớp
-                            </b>
+                            {
+                                role == "TEACHER" &&
+                                <b 
+                                    onClick={() => {
+                                        // Copy vao clipboard
+                                        navigator.clipboard.writeText("https://study.sfit.com.vn/invitation-class/" + classroomId);
+                                        alert('Đã copy link tham gia lớp học vào clipboard: ' + "https://study.sfit.com.vn/invitation-class/" + classroomId);
+                                    }}
+                                    className="text-md leading-6 font-medium text-gray-600 flex justify-center items-center gap-2 hover:text-gray-900 hover:cursor-pointer">
+                                    <Copy className="h-5 w-5 text-gray-600 hover:text-gray-900" />
+                                    Tạo link tham gia lớp
+                                </b>
+                            }
                         </div>
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                             <dl className="sm:divide-y sm:divide-gray-200">

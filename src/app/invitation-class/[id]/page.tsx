@@ -1,14 +1,14 @@
 'use client'
 
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
 import axios from "axios"
-import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { useRouter, usePathname } from "next/navigation";
+
 
 export default function Home() {
-  const searchParams = useSearchParams()
-  const classCode = searchParams.get("code") || ""
+    const pathName = usePathname();
+    const classCode = pathName.split('/')[2];
   const router = useRouter()
   const [newClass, setNewClass] = useState<any>({
     name: '',

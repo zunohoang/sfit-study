@@ -9,7 +9,7 @@
 
 import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
-import { Book, Clock, Users, CalendarDays, MessageSquare, Code, ChevronLeft, ChevronDown, ChevronUp, Bell, User, Facebook, Youtube, Github, Plus } from 'lucide-react'
+import { Book, Clock, Users, CalendarDays, MessageSquare, Code, ChevronLeft, ChevronDown, ChevronUp, Bell, User, Facebook, Youtube, Github, Plus, Copy, Delete, Rabbit, RemoveFormatting, DeleteIcon, Option, OptionIcon, MenuIcon, EclipseIcon, EllipsisVertical } from 'lucide-react'
 import DisplayContent from '@/components/DisplayContent'
 import axios from 'axios'
 import { useRouter, usePathname } from "next/navigation";
@@ -320,10 +320,21 @@ export default function ClassDetails() {
                         </Link>
                         <h1 className="text-3xl font-bold text-green-600">{classDetails.title}</h1>
                     </div>
-
+ 
                     <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-                        <div className="px-4 py-5 sm:px-6">
+                        <div className="px-4 py-5 sm:px-6 flex justify-between">
                             <h3 className="text-lg leading-6 font-medium text-green-600">Thông tin lớp học</h3>
+                            <b 
+                                hidden={role == 'STUDENT'}
+                                onClick={() => {
+                                    // Copy vao clipboard
+                                    navigator.clipboard.writeText("https://study.sfit.com.vn/classes/" + classroomId);
+                                    alert('Đã copy link tham gia lớp học vào clipboard: ' + "https://study.sfit.com.vn/classes/" + classroomId);
+                                }}
+                                className="text-md leading-6 font-medium text-gray-600 flex justify-center items-center gap-2 hover:text-gray-900 hover:cursor-pointer">
+                                <Copy className="h-5 w-5 text-gray-600 hover:text-gray-900" />
+                                Tạo link tham gia lớp
+                            </b>
                         </div>
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                             <dl className="sm:divide-y sm:divide-gray-200">
@@ -680,3 +691,26 @@ export default function ClassDetails() {
         </main>
     )
 }
+
+// const OptionOfUser = ({ memberId }: any) => {
+//     const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+
+//     return (
+//         <>
+//             <div className={`${isModalOpen ? 'block' : 'hidden'} absolute z-10 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+//                 <div className="py-1">
+//                     <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Xem thông tin</a>
+//                 </div>
+//             </div>
+//             <div className="ml-2 flex-shrink-0 flex">
+//                 <p onClick={() => {
+//                     setIsModalOpen(!isModalOpen);
+//                 }} className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-700">
+//                     <Delete className="h-5 w-5 text-gray-600" />
+//                 </p>
+//             </div>
+//         </>
+//     )
+// }

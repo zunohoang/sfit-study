@@ -2,7 +2,8 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export function middleware(req: NextRequest) {
-  const maintenanceMode = true // Bật/tắt chế độ bảo trì
+  console.log(process.env.MAINTENANCE_MODE);
+  const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';// Bật/tắt chế độ bảo trì
 
   if (maintenanceMode) {
     // Sử dụng rewrite để chuyển hướng đến trang bảo trì

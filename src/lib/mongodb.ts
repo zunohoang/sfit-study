@@ -12,8 +12,11 @@ const connectToDatabase = async (): Promise<void> => {
         return;
     }
 
+    console.log(process.env.MONGODB_URI);
+
+
     try {
-        await mongoose.connect('mongodb+srv://zunohoang:adminzunohoang@cluster0.v3sz9.mongodb.net/sfit-classmanagement?retryWrites=true&w=majority&appName=Cluster0&ssl=true&tls=true');
+        await mongoose.connect(process.env.MONGODB_URI as string);
         console.log('Connected to MongoDB');
     } catch (error) {
         console.log("RRRR");

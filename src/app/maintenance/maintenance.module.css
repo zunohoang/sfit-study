@@ -1,0 +1,86 @@
+/* Main container */
+.maintenanceContainer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb;
+    padding: 1rem;
+  }
+  
+  /* Card styling */
+  .maintenanceCard {
+    width: 100%;
+    max-width: 28rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  /* Icon styling */
+  .iconContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .iconCircle {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    background-color: #fff8e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .alertIcon {
+    height: 2.5rem;
+    width: 2.5rem;
+    color: #f59e0b;
+  }
+  
+  /* Text styling */
+  .maintenanceTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .maintenanceMessage {
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  .maintenanceTime {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .timeValue {
+    font-weight: 500;
+  }
+  
+  /* Support info */
+  .supportInfo {
+    margin-top: 2rem;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .supportLink {
+    color: #16a34a;
+    text-decoration: none;
+  }
+  
+  .supportLink:hover {
+    text-decoration: underline;
+  }
+  
+  

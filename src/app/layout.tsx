@@ -60,7 +60,7 @@ export default function RootLayout({
         <link rel="canonical" href="https://sfit.com.vn" />
         <title>{metadata.title}</title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1848467627375651"
-     crossorigin="anonymous"></script>
+     crossOrigin="anonymous"></script>
       </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
